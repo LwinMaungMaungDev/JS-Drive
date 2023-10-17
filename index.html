@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="description"
+      content="JS Drive is a JavaScript based car racing game. Avoid obstacles along the road, speed up or slow down when necessary. See how many scores you can get."
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/general.css" />
+    <link rel="stylesheet" href="css/queries.css" />
+
+    <script type="module" src="src/js/controller.js"></script>
+
+    <title>JS Drive &mdash; Car Racing Game</title>
+  </head>
+  <body>
+    <header></header>
+    <main>
+      <section class="section-left-components">
+        <div class="play-time label"><time>01:50</time></div>
+        <div class="accelerometer">Accelerometer</div>
+        <div class="turn-btns">
+          <button class="btn btn--turn-left">
+            <svg class="btn--icon">
+              <use
+                href="src/img/icons.svg#icon-caret-back-circle-outline"
+              ></use>
+            </svg>
+          </button>
+          <button class="btn btn--turn-right">
+            <svg class="btn--icon">
+              <use
+                href="src/img/icons.svg#icon-caret-forward-circle-outline"
+              ></use>
+            </svg>
+          </button>
+        </div>
+      </section>
+      <section class="section-right-components">
+        <div class="high-score-pause-container">
+          <p class="high-score label">High Score: 10025</p>
+          <button class="btn">
+            <svg class="btn--icon">
+              <use href="src/img/icons.svg#icon-pause-circle-outline"></use>
+            </svg>
+          </button>
+        </div>
+        <div class="speed-btns">
+          <button class="btn btn--brake">
+            <img
+              class="brake"
+              src="src/img/btn/brake.png"
+              alt="Car Brake Pedal"
+            />
+          </button>
+          <button class="btn btn--lever">
+            <img
+              class="lever"
+              src="src/img/btn/lever.png"
+              alt="Car Lever Pedal"
+            />
+          </button>
+        </div>
+      </section>
+      <section class="section-game-window">
+        <img class="car" src="src/img/cars/car.png" alt="Player's Car" />
+        <canvas id="canvas"></canvas>
+      </section>
+    </main>
+    <footer></footer>
+  </body>
+</html>

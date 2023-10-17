@@ -1,0 +1,16 @@
+<svg aria-hidden="true" style="position: absolute; width: 0; height: 0; overflow: hidden;" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <defs>
+    <symbol id="icon-caret-back-circle-outline" viewBox="0 0 512 512">
+      <path d="M273.77 169.57l-89.09 74.13a16 16 0 000 24.6l89.09 74.13A16 16 0 00300 330.14V181.86a16 16 0 00-26.23-12.29z" fill="currentColor" stroke="currentColor" stroke-miterlimit="10"></path>
+      <path d="M 448 256 c 0 -106 -86 -192 -192 -192 S 64 150 64 256 s 86 192 192 192 s 192 -86 192 -192 Z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"></path>
+    </symbol>
+    <symbol id="icon-caret-forward-circle-outline" viewBox="0 0 512 512">
+      <path d="M 238.23 342.43 l 89.09 -74.13 a 16 16 0 0 0 0 -24.6 l -89.09 -74.13 A 16 16 0 0 0 212 181.86 v 148.28 a 16 16 0 0 0 26.23 12.29 Z" fill="currentColor" stroke="currentColor" stroke-miterlimit="10"></path>
+      <path d="M 448 256 c 0 -106 -86 -192 -192 -192 S 64 150 64 256 s 86 192 192 192 s 192 -86 192 -192 Z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"></path>
+    </symbol>
+    <symbol id="icon-pause-circle-outline" viewBox="0 0 512 512">
+      <path d="M448 256c0-106-86-192-192-192S64 150 64 256s86 192 192 192 192-86 192-192z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/></path>
+      <path d="M208 192v128M304 192v128" fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32"/>
+    </symbol>
+  </defs>
+</svg>

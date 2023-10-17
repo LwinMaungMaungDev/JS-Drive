@@ -1,0 +1,15 @@
+{
+  "name": "jsdrive",
+  "version": "1.0.0",
+  "description": "JS Drive is a JavaScript based car racing game. Avoid obstacles along the road, speed up or slow down when necessary. See how many scores you can get.",
+  "scripts": {
+    "start": "parcel index.html",
+    "build": "parcel build index.html"
+  },
+  "author": "Lwin Maung Maung",
+  "license": "ISC",
+  "devDependencies": {
+    "parcel": "^2.10.0",
+    "sharp": "^0.31.3"
+  }
+}

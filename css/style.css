@@ -1,0 +1,96 @@
+/****************************************/
+/* Game Components From Left Side */
+/****************************************/
+
+.section-left-components {
+  position: absolute;
+  left: 0;
+  height: 100%;
+  padding: 3.5% 3.5%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.accelerometer {
+  transform: translate(0, -10rem);
+}
+
+.turn-btns {
+  display: flex;
+  gap: 40px;
+}
+
+.btn--icon {
+  height: 7.4rem;
+  width: 7.4rem;
+  color: #e67e22;
+}
+
+/****************************************/
+/* Game Components From Right Side */
+/****************************************/
+
+.section-right-components {
+  position: absolute;
+  right: 0;
+  height: 100%;
+  padding: 3.5% 3.5%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.high-score-pause-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.label {
+  font-size: 2.4rem;
+  line-height: 1.05;
+  margin-bottom: 3.2rem;
+}
+
+.pause-icon {
+  height: 5.2rem;
+  width: 5.2rem;
+  color: #e67e22;
+}
+
+.speed-btns {
+  display: flex;
+  gap: 20px;
+}
+
+.btn {
+  background: none;
+  border: none;
+  font-family: inherit;
+  font-size: 1.8rem;
+  text-transform: uppercase;
+  cursor: pointer;
+  font-weight: 400;
+}
+
+.brake,
+.lever {
+  width: 100px;
+}
+
+/****************************************/
+/* Game Window */
+/****************************************/
+
+.section-game-window {
+}
+
+.car {
+  width: 35px;
+  position: absolute;
+  left: 50%;
+  top: 60%;
+  transform: translate(-50%, 0);
+}
