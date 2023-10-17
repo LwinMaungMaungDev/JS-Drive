@@ -1,16 +1,8 @@
-const canvas = document.getElementById("canvas");
+import canvasView from "./views/canvasView.js";
+import * as gameObjects from "./models/gameObjects.js";
+
 const speedBtns = document.querySelector(".speed-btns");
 const turnBtns = document.querySelector(".turn-btns");
-
-const ctx = canvas.getContext("2d");
-
-const img = new Image();
-
-const imageUrl = new URL(
-  "../img/canvas/spacebg.png?as=png&width=100%&height=100%",
-  import.meta.url
-);
-img.src = imageUrl;
 
 let forwardSpeed = 0;
 let turnSpeed = 0;
@@ -20,39 +12,19 @@ let speedUpTimer;
 let slowDownTimer;
 
 window.onload = function () {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-
-  drawImage(img, bgImgHorizontalOffset, bgImgVerticalOffset);
-
-  startCanvasAnimation();
+  canvasView.initializeCanvas(startCanvasAnimation);
 };
-
-function drawImage(img, dx, dy) {
-  ctx.drawImage(img, dx, dy, canvas.width, canvas.height);
-}
-
-function drawCanvas() {
-  drawImage(img, bgImgHorizontalOffset, bgImgVerticalOffset);
-  drawImage(img, bgImgHorizontalOffset, bgImgVerticalOffset - canvas.height);
-}
 
 function startCanvasAnimation() {
   bgImgVerticalOffset += forwardSpeed;
-  if (
-    bgImgVerticalOffset === canvas.height ||
-    bgImgVerticalOffset > canvas.height
-  )
-    bgImgVerticalOffset = 0;
+  if (canvasView.isBgImgEnd(bgImgVerticalOffset)) bgImgVerticalOffset = 0;
 
   // Turn Left or Right
-  if (
-    (bgImgHorizontalOffset < canvas.width / 2 && turnSpeed > 0) ||
-    (bgImgHorizontalOffset > canvas.width / -2 && turnSpeed < 0)
-  )
-    bgImgHorizontalOffset += turnSpeed;
-
-  drawCanvas();
+  if (forwardSpeed > 0) {
+    if (canvasView.canMoveHorizontal(bgImgHorizontalOffset, turnSpeed))
+      bgImgHorizontalOffset += turnSpeed;
+  }
+  canvasView.drawCanvas(bgImgHorizontalOffset, bgImgVerticalOffset);
 
   window.requestAnimationFrame(startCanvasAnimation);
 }
@@ -75,10 +47,15 @@ function slowDown() {
     forwardSpeed -= 0.2;
     slowDownTimer = setInterval(() => {
       forwardSpeed <= 0 ? (forwardSpeed = 0) : (forwardSpeed -= 2);
-      if (forwardSpeed < 0) forwardSpeed = 0;
+      if (forwardSpeed < 0) stop();
     }, 250);
   }
-  if (forwardSpeed < 0) forwardSpeed = 0;
+  if (forwardSpeed < 0) stop();
+}
+
+function stop() {
+  forwardSpeed = 0;
+  turnSpeed = 0;
 }
 
 function stopSlowDown() {
