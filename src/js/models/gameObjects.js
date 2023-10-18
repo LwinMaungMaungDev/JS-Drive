@@ -9,10 +9,35 @@ export const state = {
     speedUpTimer: undefined,
     slowDownTimer: undefined,
   },
+  brick1: {
+    type: 1,
+    displayInterval: -1,
+    dx: 0.5, // 0 means left-most and 1 means right-most
+  },
+  game: {
+    bricks: [
+      // Do not put bricks until interval 3
+      { type: 1, displayInterval: 8, dx: 0.2 },
+      { type: 1, displayInterval: 5, dx: 0.7 },
+      { type: 1, displayInterval: 3, dx: 0.5 },
+    ],
+    currentInterval: 1,
+  },
 };
 
 export const setBgImgVerticalOffset = function (offset) {
   state.canvas.bgImgVerticalOffset = offset;
+
+  // After each bg img passed, we increase the interval and prepare objects
+  if (offset === 0 && state.canvas.forwardSpeed > 0) {
+    state.game.currentInterval++;
+    if (
+      state.game.bricks.length &&
+      state.game.currentInterval > state.brick1.displayInterval
+    ) {
+      state.brick1 = state.game.bricks.pop();
+    }
+  }
 };
 
 export const setBgImgHorizontalOffset = function (offset) {

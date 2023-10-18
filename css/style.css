@@ -86,11 +86,3 @@
 
 .section-game-window {
 }
-
-.car {
-  width: 35px;
-  position: absolute;
-  left: 50%;
-  top: 60%;
-  transform: translate(-50%, 0);
-}

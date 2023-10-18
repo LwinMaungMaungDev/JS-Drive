@@ -8,6 +8,8 @@ import * as gameObjects from "./models/gameObjects.js";
 
 function startCanvasAnimation() {
   const { canvas } = gameObjects.state;
+  const { game } = gameObjects.state;
+  const { brick1 } = gameObjects.state;
   // 1) If there is some forwardSpeed, this will move the canvas down or the car up.
   gameObjects.setBgImgVerticalOffset(
     canvas.bgImgVerticalOffset + canvas.forwardSpeed
@@ -27,16 +29,20 @@ function startCanvasAnimation() {
         canvas.bgImgHorizontalOffset + canvas.turnSpeed
       );
   }
+
   // 4) With the values just calculated, redraw the canvas.
   canvasView.drawCanvas(
     canvas.bgImgHorizontalOffset,
-    canvas.bgImgVerticalOffset
+    canvas.bgImgVerticalOffset,
+    brick1,
+    game.currentInterval
   );
+
   // 5) Loop the animation
   window.requestAnimationFrame(startCanvasAnimation);
 }
 
-////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
 // Handling Keyboard presses
 
 function handleControlKeyPresses() {
