@@ -14,14 +14,14 @@ function startCanvasAnimation() {
   const { coin } = gameState.state;
   const { road } = gameState.state;
   const { botCars } = gameState.state;
-  const { bgImage } = gameState.state;
   // 1) If there is some forwardSpeed, this will move the canvas down or the car up.
-  gameState.setBgImgVerticalOffset(
-    canvas.bgImgVerticalOffset + canvas.forwardSpeed
+  gameState.setParallaxVerticalOffset(
+    canvas.parallaxVerticalOffset + canvas.forwardSpeed
   );
+  gameState.moveBotCars();
   // 2) If the image is fully displayed,
-  if (canvasView.isBgImgEnd(canvas.bgImgVerticalOffset)) {
-    gameState.setBgImgVerticalOffset(0);
+  if (canvasView.isParallaxEnd(canvas.parallaxVerticalOffset)) {
+    gameState.setParallaxVerticalOffset(0);
     canvasView.resetView(road, false); // Needs to do before switching road
     const newRoad = gameState.switchRoad();
     if (newRoad) canvasView.switchRoad(newRoad, true);
@@ -30,44 +30,54 @@ function startCanvasAnimation() {
   if (canvas.forwardSpeed > 0) {
     if (
       canvasView.canMoveHorizontal(
-        canvas.bgImgHorizontalOffset,
+        canvas.parallaxHorizontalOffset,
         canvas.turnSpeed,
         road.leftOffsetReducedFactor,
         road.rightOffsetReducedFactor
       )
     )
-      gameState.setBgImgHorizontalOffset(
-        canvas.bgImgHorizontalOffset + canvas.turnSpeed
+      gameState.setParallaxHorizontalOffset(
+        canvas.parallaxHorizontalOffset + canvas.turnSpeed
       );
   }
 
   // 4) With the values just calculated, redraw the canvas.
   canvasView.drawCanvas(
-    canvas.bgImgHorizontalOffset,
-    canvas.bgImgVerticalOffset,
+    canvas.parallaxHorizontalOffset,
+    canvas.parallaxVerticalOffset,
     stone,
     roadrepair,
     coin,
+    game.currentInterval
+  );
+
+  // 5) Draw bot cars and move them
+  canvasView.drawBotCars(
+    canvas.parallaxHorizontalOffset,
+    canvas.parallaxVerticalOffset,
     botCars,
     game.currentInterval
   );
 
-  // 5) Detect collision for stones
+  // 6) Detect collision for stones
   if (stone.displayInterval === game.currentInterval) _detectCollision(stone);
 
-  // 6) Detect collision for road repairs
+  // 7) Detect collision for road repairs
   if (roadrepair.displayInterval === game.currentInterval)
     _detectCollision(roadrepair);
 
-  // 7) Detect collision for coins
+  // 8) Detect collision for coins
   if (coin.displayInterval === game.currentInterval) _detectCoinCollect(coin);
 
-  // 8) Detect collision for botCar
-  //
+  // 9) Detect collision for botCar
+  botCars.map((botCar) => {
+    if (botCar.displayInterval <= game.currentInterval)
+      _detectCollision(botCar);
+  });
 
-  // 9) Move bot car
+  // 10) Move bot car
 
-  // 10) Loop the animation
+  // 11) Loop the animation
   window.requestAnimationFrame(startCanvasAnimation);
 }
 
@@ -77,8 +87,8 @@ function startCanvasAnimation() {
 function _detectCollision(object) {
   const { canvas } = gameState.state;
   canvasView.detectCollision(
-    canvas.bgImgHorizontalOffset,
-    canvas.bgImgVerticalOffset,
+    canvas.parallaxHorizontalOffset,
+    canvas.parallaxVerticalOffset,
     object,
     _handleCollision
   );
@@ -87,20 +97,10 @@ function _detectCollision(object) {
 function _detectCoinCollect(coin) {
   const { canvas } = gameState.state;
   canvasView.detectCollision(
-    canvas.bgImgHorizontalOffset,
-    canvas.bgImgVerticalOffset,
+    canvas.parallaxHorizontalOffset,
+    canvas.parallaxVerticalOffset,
     coin,
     _handleCoinCollect
-  );
-}
-
-function _detectBotCarCollision(botCar) {
-  const { canvas } = gameState.state;
-  canvasView.detectCollision(
-    canvas.bgImgHorizontalOffset,
-    canvas.bgImgVerticalOffset,
-    botCar,
-    _handleCollision
   );
 }
 

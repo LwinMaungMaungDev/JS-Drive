@@ -8,8 +8,8 @@ export const state = {
   canvas: {
     forwardSpeed: 0,
     turnSpeed: 0,
-    bgImgVerticalOffset: 0,
-    bgImgHorizontalOffset: 0,
+    parallaxVerticalOffset: 0,
+    parallaxHorizontalOffset: 0,
     speedUpTimer: undefined,
     slowDownTimer: undefined,
   },
@@ -35,6 +35,7 @@ export const state = {
       dy: 0,
       width: 35,
       height: (35 * 337) / 178,
+      speed: 2,
     },
     {
       displayInterval: 5,
@@ -42,6 +43,7 @@ export const state = {
       dy: 0,
       width: 35,
       height: (35 * 337) / 178,
+      speed: 3,
     },
   ],
   game: {
@@ -55,6 +57,7 @@ export const state = {
         dy: 0,
         width: 35,
         height: (35 * 337) / 178,
+        speed: 2,
       },
     ],
     roads,
@@ -67,8 +70,8 @@ export const state = {
 //////////////////////////////////////////////////////////////////////////////
 // Driving
 
-export const setBgImgVerticalOffset = function (offset) {
-  state.canvas.bgImgVerticalOffset = offset;
+export const setParallaxVerticalOffset = function (offset) {
+  state.canvas.parallaxVerticalOffset = offset;
 
   // After each bg img passed, we increase the interval and prepare objects
   if (offset === 0 && state.canvas.forwardSpeed > 0) {
@@ -91,11 +94,13 @@ export const setBgImgVerticalOffset = function (offset) {
       state.game.currentInterval > state.coin.displayInterval
     )
       state.coin = state.game.coins.pop();
+    // Add bot cars
+    //
   }
 };
 
-export const setBgImgHorizontalOffset = function (offset) {
-  state.canvas.bgImgHorizontalOffset = offset;
+export const setParallaxHorizontalOffset = function (offset) {
+  state.canvas.parallaxHorizontalOffset = offset;
 };
 
 export const setForwardSpeed = function (speed) {
@@ -168,10 +173,10 @@ export const switchRoad = function () {
 
 export const handleCollision = function (direction) {
   if (direction === 0) {
-    state.game.health -= state.canvas.forwardSpeed * 4;
+    state.game.health -= Math.round(state.canvas.forwardSpeed);
     state.canvas.forwardSpeed = -1;
   } else {
-    state.game.health -= state.canvas.forwardSpeed * 2;
+    state.game.health -= Math.round(state.canvas.forwardSpeed * 0.5);
     state.canvas.turnSpeed = state.canvas.forwardSpeed * -direction;
     state.canvas.forwardSpeed *= 0.9;
   }
@@ -180,4 +185,18 @@ export const handleCollision = function (direction) {
 export const collectCoin = function () {
   state.coin = state.game.coins.pop();
   state.game.score++;
+};
+
+//////////////////////////////////////////////////////////////////////////////
+// Move Bot Cars
+
+export const moveBotCars = function () {
+  state.botCars.forEach((botCar, i) => {
+    if (state.game.currentInterval >= botCar.displayInterval) {
+      // Move bot cars down by forward speed
+      state.botCars[i].dy += state.canvas.forwardSpeed;
+      // Move bot cars up
+      state.botCars[i].dy -= state.botCars[i].speed;
+    }
+  });
 };

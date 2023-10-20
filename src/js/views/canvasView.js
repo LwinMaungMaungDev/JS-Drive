@@ -77,10 +77,10 @@ class CanvasView {
     this._ctx.drawImage(img, dx, dy, width, height);
   }
 
-  _drawBgImage(bgImgHorizontalOffset, verticalOffset, image) {
+  _drawBgImage(parallaxHorizontalOffset, verticalOffset, image) {
     this._drawImage(
       image,
-      bgImgHorizontalOffset,
+      parallaxHorizontalOffset,
       verticalOffset,
       this._canvas.width,
       this._canvas.height
@@ -101,40 +101,46 @@ class CanvasView {
 
   /**
    * A general function to draw objects such as stones and coins on the canvas
-   * @param {*} bgImgHorizontalOffset
-   * @param {*} bgImgVerticalOffset
+   * @param {*} parallaxHorizontalOffset
+   * @param {*} parallaxVerticalOffset
    * @param {*} object
    * @param {*} img
    * @param {*} currentInterval
    */
   _drawObjects(
-    bgImgHorizontalOffset,
-    bgImgVerticalOffset,
+    parallaxHorizontalOffset,
+    parallaxVerticalOffset,
     object,
     img,
     currentInterval
   ) {
-    const objectDx =
-      object.dx * this._canvas.width - 100 + bgImgHorizontalOffset;
+    const objectDx = object.dx * this._canvas.width + parallaxHorizontalOffset;
     this._drawImage(
       img,
       objectDx,
       object.displayInterval === currentInterval
-        ? bgImgVerticalOffset
-        : bgImgVerticalOffset - this._canvas.height,
+        ? parallaxVerticalOffset
+        : parallaxVerticalOffset - this._canvas.height,
       object.width,
       object.height
     );
   }
 
-  detectCollision(bgImgHorizontalOffset, bgImgVerticalOffset, object, handler) {
+  detectCollision(
+    parallaxHorizontalOffset,
+    parallaxVerticalOffset,
+    object,
+    handler
+  ) {
     const carDx = this._canvas.width / 2 - this._carWidth / 2;
     const carDy = this._canvas.height / 2 + this._carHeight * 2;
-    const objectDx =
-      object.dx * this._canvas.width - 100 + bgImgHorizontalOffset;
-    const objectDy = bgImgVerticalOffset + object.height;
+    const objectDx = object.dx * this._canvas.width + parallaxHorizontalOffset;
+    const objectDy = object.dy ?? parallaxVerticalOffset;
     // Only detect if the object is closed to the car
-    if (carDy < objectDy && carDy + object.height > objectDy) {
+    if (
+      carDy <= objectDy + object.height &&
+      carDy + this._carHeight >= objectDy
+    ) {
       // 1) Check if car hits the object straight from the middle
       const isCollideMiddle =
         (carDx >= objectDx &&
@@ -164,8 +170,8 @@ class CanvasView {
 
   /**
    * This is called 60 fps to draw the canvas with objects
-   * @param {*} bgImgHorizontalOffset
-   * @param {*} bgImgVerticalOffset
+   * @param {*} parallaxHorizontalOffset
+   * @param {*} parallaxVerticalOffset
    * @param {*} stone
    * @param {*} roadrepair
    * @param {*} coin
@@ -173,60 +179,76 @@ class CanvasView {
    * @param {*} currentInterval
    */
   drawCanvas(
-    bgImgHorizontalOffset,
-    bgImgVerticalOffset,
+    parallaxHorizontalOffset,
+    parallaxVerticalOffset,
     stone,
     roadrepair,
     coin,
-    botCars,
     currentInterval
   ) {
     // 1) Draw background image
     this._drawBgImage(
-      bgImgHorizontalOffset,
-      bgImgVerticalOffset,
+      parallaxHorizontalOffset,
+      parallaxVerticalOffset,
       this._lowerBackground
     );
     this._drawBgImage(
-      bgImgHorizontalOffset,
-      bgImgVerticalOffset - this._canvas.height,
+      parallaxHorizontalOffset,
+      parallaxVerticalOffset - this._canvas.height,
       this._upperBackground
     );
-    this._adjustCanvasWidth(bgImgVerticalOffset);
+    this._adjustCanvasWidth(parallaxVerticalOffset);
 
     // 2) Draw car
     this._drawCarImage();
     // 3) Draw stones
     this._drawStones(
-      bgImgHorizontalOffset,
-      bgImgVerticalOffset,
+      parallaxHorizontalOffset,
+      parallaxVerticalOffset,
       stone,
       currentInterval
     );
     // 4) Draw road repairs
     this._drawRoadRepairs(
-      bgImgHorizontalOffset,
-      bgImgVerticalOffset,
+      parallaxHorizontalOffset,
+      parallaxVerticalOffset,
       roadrepair,
       currentInterval
     );
     // 5) Draw coins
     this._drawCoins(
-      bgImgHorizontalOffset,
-      bgImgVerticalOffset,
+      parallaxHorizontalOffset,
+      parallaxVerticalOffset,
       coin,
       currentInterval
     );
-    // 6) Draw road
-    //
   }
 
-  _adjustCanvasWidth(verticalOffset) {
+  drawBotCars(
+    parallaxHorizontalOffset,
+    parallaxVerticalOffset,
+    botCars,
+    currentInterval
+  ) {
+    botCars.map((botCar) =>
+      this._drawBotCar(
+        parallaxHorizontalOffset,
+        parallaxVerticalOffset,
+        botCar,
+        currentInterval
+      )
+    );
+  }
+
+  _adjustCanvasWidth(parallaxVerticalOffset) {
     if (
       this._canvasLeftWidthReducedFactorNew ||
       this._canvasRightWidthReducedFactorNew
     ) {
-      if (verticalOffset >= this._canvas.height / 2 + this._carHeight * 2) {
+      if (
+        parallaxVerticalOffset >=
+        this._canvas.height / 2 + this._carHeight * 2
+      ) {
         this._canvasLeftWidthReducedFactor =
           this._canvasLeftWidthReducedFactorNew;
         this._canvasRightWidthReducedFactor =
@@ -238,8 +260,8 @@ class CanvasView {
   }
 
   _drawStones(
-    bgImgHorizontalOffset,
-    bgImgVerticalOffset,
+    parallaxHorizontalOffset,
+    parallaxVerticalOffset,
     stone,
     currentInterval
   ) {
@@ -257,8 +279,8 @@ class CanvasView {
           break;
       }
       this._drawObjects(
-        bgImgHorizontalOffset,
-        bgImgVerticalOffset,
+        parallaxHorizontalOffset,
+        parallaxVerticalOffset,
         stone,
         stoneImg,
         currentInterval
@@ -267,8 +289,8 @@ class CanvasView {
   }
 
   _drawRoadRepairs(
-    bgImgHorizontalOffset,
-    bgImgVerticalOffset,
+    parallaxHorizontalOffset,
+    parallaxVerticalOffset,
     roadrepair,
     currentInterval
   ) {
@@ -286,8 +308,8 @@ class CanvasView {
           break;
       }
       this._drawObjects(
-        bgImgHorizontalOffset,
-        bgImgVerticalOffset,
+        parallaxHorizontalOffset,
+        parallaxVerticalOffset,
         roadrepair,
         roadRepairImg,
         currentInterval
@@ -296,8 +318,8 @@ class CanvasView {
   }
 
   _drawCoins(
-    bgImgHorizontalOffset,
-    bgImgVerticalOffset,
+    parallaxHorizontalOffset,
+    parallaxVerticalOffset,
     coin,
     currentInterval
   ) {
@@ -306,8 +328,8 @@ class CanvasView {
       coin.displayInterval - 1 === currentInterval
     ) {
       this._drawObjects(
-        bgImgHorizontalOffset,
-        bgImgVerticalOffset,
+        parallaxHorizontalOffset,
+        parallaxVerticalOffset,
         coin,
         this._coin,
         currentInterval
@@ -316,44 +338,45 @@ class CanvasView {
   }
 
   _drawBotCar(
-    bgImgHorizontalOffset,
-    bgImgVerticalOffset,
+    parallaxHorizontalOffset,
+    parallaxVerticalOffset,
     botCar,
     currentInterval
   ) {
     if (
-      botCar.displayInterval === currentInterval ||
+      botCar.displayInterval <= currentInterval ||
       botCar.displayInterval - 1 === currentInterval
     ) {
       const botCarDx =
-        botCar.dx * this._canvas.width - 100 + bgImgHorizontalOffset;
+        botCar.dx * this._canvas.width - 100 + parallaxHorizontalOffset;
       this._drawImage(
         this._botCar,
         botCarDx,
-        botCar.displayInterval === currentInterval
-          ? bgImgVerticalOffset + botCar.dy
-          : bgImgVerticalOffset - this._canvas.height,
+        botCar.displayInterval <= currentInterval
+          ? botCar.dy
+          : parallaxVerticalOffset - this._canvas.height,
         botCar.width,
         botCar.height
       );
     }
   }
 
-  isBgImgEnd(bgImgVerticalOffset) {
+  isParallaxEnd(parallaxVerticalOffset) {
     const isEnded =
-      bgImgVerticalOffset === this._canvas.height ||
-      bgImgVerticalOffset > this._canvas.height;
+      parallaxVerticalOffset === this._canvas.height ||
+      parallaxVerticalOffset > this._canvas.height;
     return isEnded;
   }
 
   canMoveHorizontal(
-    bgImgHorizontalOffset,
+    parallaxHorizontalOffset,
     turnSpeed,
     reducedFactorLeft,
     reducedFactorRight
   ) {
     // We don't change the width (in which the car can drive) too suddenly
-    // We change it once the background image reach the car
+    // We change it once the new background image reach the car
+    // We do this in _adjustCanvasWidth
     if (
       this._canvasLeftWidthReducedFactor !== reducedFactorLeft ||
       this._canvasRightWidthReducedFactor !== reducedFactorRight
@@ -362,15 +385,19 @@ class CanvasView {
       this._canvasRightWidthReducedFactorNew = reducedFactorRight;
     }
     return (
-      (bgImgHorizontalOffset <
+      (parallaxHorizontalOffset <
         (this._canvas.width * this._canvasLeftWidthReducedFactor) / 2 &&
         turnSpeed > 0) ||
-      (bgImgHorizontalOffset >
+      (parallaxHorizontalOffset >
         (this._canvas.width * this._canvasRightWidthReducedFactor) / -2 &&
         turnSpeed < 0)
     );
   }
 
+  /**
+   * This function is executed for the end of each image
+   * @param {Object} road Current road
+   */
   resetView(road) {
     if (this._isSwitchingRoad) {
       // If _isSwitchingRoad is true, we need to switch the lower background.
