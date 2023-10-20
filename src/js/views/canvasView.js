@@ -348,7 +348,7 @@ class CanvasView {
       botCar.displayInterval - 1 === currentInterval
     ) {
       const botCarDx =
-        botCar.dx * this._canvas.width - 100 + parallaxHorizontalOffset;
+        botCar.dx * this._canvas.width + parallaxHorizontalOffset;
       this._drawImage(
         this._botCar,
         botCarDx,

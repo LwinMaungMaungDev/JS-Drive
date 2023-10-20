@@ -75,9 +75,7 @@ function startCanvasAnimation() {
       _detectCollision(botCar);
   });
 
-  // 10) Move bot car
-
-  // 11) Loop the animation
+  // 10) Loop the animation
   window.requestAnimationFrame(startCanvasAnimation);
 }
 
