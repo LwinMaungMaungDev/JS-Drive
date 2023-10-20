@@ -1,27 +1,69 @@
 class CanvasView {
   _canvas = document.getElementById("canvas");
   _ctx = this._canvas.getContext("2d");
-  _bgImg = new Image();
-  _brick = new Image();
-  _car = new Image();
+  _road1 = new Image();
+  _road2 = new Image();
+  _stone1 = new Image();
+  _car1 = new Image();
+  _roadrepair1 = new Image();
+  _coin = new Image();
+  _botCar = new Image();
+  _upperBackground = this._road1;
+  _lowerBackground = this._road1;
+  _isSwitchingRoad = false;
+  _canvasLeftWidthReducedFactor = 0.36;
+  _canvasRightWidthReducedFactor = 0.36;
+  _canvasLeftWidthReducedFactorNew;
+  _canvasRightWidthReducedFactorNew;
+
+  _carWidth = 35;
+  _carHeight = (this._carWidth * 128) / 53;
 
   constructor() {
     this._loadImages();
   }
 
   _loadImages() {
-    const canvasImgUrl = new URL(
-      "../../img/canvas/spacebg.png?as=png&width=100%&height=100%",
+    // Background Roads
+    // 1)
+    const road1ImgUrl = new URL(
+      "../../img/canvas/roadTest.png?as=png",
       import.meta.url
     );
-    this._bgImg.src = canvasImgUrl;
-    const brickImgUrl = new URL(
-      "../../img/canvas/brick1.png?as=png",
+    this._road1.src = road1ImgUrl;
+    // 2)
+    const road2ImgUrl = new URL(
+      "../../img/canvas/gravelRoadTest.png?as=png",
       import.meta.url
     );
-    this._brick.src = brickImgUrl;
+    this._road2.src = road2ImgUrl;
+    // Stone1
+    const stone1ImgUrl = new URL(
+      "../../img/canvas/stone1.png?as=png",
+      import.meta.url
+    );
+    this._stone1.src = stone1ImgUrl;
+    // RoadRepair
+    const roadRepairImgUrl = new URL(
+      "../../img/canvas/roadrepair.jpg?as=jpg",
+      import.meta.url
+    );
+    this._roadrepair1.src = roadRepairImgUrl;
+    // Coin
+    const coinImgUrl = new URL(
+      "../../img/canvas/coin.png?as=png",
+      import.meta.url
+    );
+    this._coin.src = coinImgUrl;
+    // Car
     const carImgUrl = new URL("../../img/cars/car.png?as=png", import.meta.url);
-    this._car.src = carImgUrl;
+    this._car1.src = carImgUrl;
+    // BotCar
+    const botCarImgUrl = new URL(
+      "../../img/cars/botCar.png?as=png",
+      import.meta.url
+    );
+    this._botCar.src = botCarImgUrl;
   }
 
   initializeCanvas(startCanvasAnimation) {
@@ -35,9 +77,9 @@ class CanvasView {
     this._ctx.drawImage(img, dx, dy, width, height);
   }
 
-  _drawBgImage(bgImgHorizontalOffset, verticalOffset) {
+  _drawBgImage(bgImgHorizontalOffset, verticalOffset, image) {
     this._drawImage(
-      this._bgImg,
+      image,
       bgImgHorizontalOffset,
       verticalOffset,
       this._canvas.width,
@@ -46,111 +88,313 @@ class CanvasView {
   }
 
   _drawCarImage() {
-    this._drawImage(
-      this._car,
-      this._canvas.width / 2 - 35 / 2,
-      this._canvas.height / 2 + (35 * 128) / 53,
-      35,
-      (35 * 128) / 53
-    );
-  }
-
-  _drawBricks(
-    bgImgHorizontalOffset,
-    bgImgVerticalOffset,
-    brick1,
-    currentInterval
-  ) {
-    const brick1Width = 100;
-    const brick1Height = (brick1Width * 50) / 79;
-    const brickDx =
-      brick1.dx * this._canvas.width - 100 + bgImgHorizontalOffset;
-    this._drawImage(
-      this._brick,
-      brickDx,
-      brick1.displayInterval === currentInterval
-        ? bgImgVerticalOffset
-        : bgImgVerticalOffset - this._canvas.height,
-      brick1Width,
-      brick1Height
-    );
-  }
-
-  _detectCollision(bgImgHorizontalOffset, bgImgVerticalOffset, brick1) {
-    const brick1Width = 100;
-    const brick1Height = (brick1Width * 50) / 79;
-    const brickDx =
-      brick1.dx * this._canvas.width - 100 + bgImgHorizontalOffset;
     const carWidth = 35;
     const carHeight = (carWidth * 128) / 53;
-    const carDx = this._canvas.width / 2 - carWidth / 2;
-    const carDy = this._canvas.height / 2 + carHeight;
-    const brick1Dy = bgImgVerticalOffset + brick1Height;
-    if (carDy < brick1Dy && carDy + brick1Height > brick1Dy) {
+    this._drawImage(
+      this._car1,
+      this._canvas.width / 2 - carWidth / 2,
+      this._canvas.height / 2 + carHeight * 2,
+      carWidth,
+      carHeight
+    );
+  }
+
+  /**
+   * A general function to draw objects such as stones and coins on the canvas
+   * @param {*} bgImgHorizontalOffset
+   * @param {*} bgImgVerticalOffset
+   * @param {*} object
+   * @param {*} img
+   * @param {*} currentInterval
+   */
+  _drawObjects(
+    bgImgHorizontalOffset,
+    bgImgVerticalOffset,
+    object,
+    img,
+    currentInterval
+  ) {
+    const objectDx =
+      object.dx * this._canvas.width - 100 + bgImgHorizontalOffset;
+    this._drawImage(
+      img,
+      objectDx,
+      object.displayInterval === currentInterval
+        ? bgImgVerticalOffset
+        : bgImgVerticalOffset - this._canvas.height,
+      object.width,
+      object.height
+    );
+  }
+
+  detectCollision(bgImgHorizontalOffset, bgImgVerticalOffset, object, handler) {
+    const carDx = this._canvas.width / 2 - this._carWidth / 2;
+    const carDy = this._canvas.height / 2 + this._carHeight * 2;
+    const objectDx =
+      object.dx * this._canvas.width - 100 + bgImgHorizontalOffset;
+    const objectDy = bgImgVerticalOffset + object.height;
+    // Only detect if the object is closed to the car
+    if (carDy < objectDy && carDy + object.height > objectDy) {
+      // 1) Check if car hits the object straight from the middle
       const isCollideMiddle =
-        (carDx >= brickDx && carDx + carWidth < brickDx + brick1Width) ||
-        (carDx + carWidth <= brickDx + brick1Width && carDx > brickDx);
+        (carDx >= objectDx &&
+          carDx + this._carWidth < objectDx + object.width) ||
+        (carDx + this._carWidth <= objectDx + object.width && carDx > objectDx);
       if (isCollideMiddle) {
-        console.log("Bum Bum from MIDDLE 💥");
+        handler(0);
         return;
       }
-      const isCollideFromLeft = carDx + carWidth >= brickDx && carDx < brickDx;
+      // 2) Check if car hits the object from the left side
+      const isCollideFromLeft =
+        carDx + this._carWidth >= objectDx && carDx < objectDx;
       if (isCollideFromLeft) {
-        console.log("Bum Bum from LEFT 💥");
+        handler(-1);
         return;
       }
+      // 3) Check if car hits the object from the right side
       const isCollideFromRight =
-        carDx <= brickDx + brick1Width &&
-        carDx + carWidth > brickDx + brick1Width;
+        carDx <= objectDx + object.width &&
+        carDx + this._carWidth > objectDx + object.width;
       if (isCollideFromRight) {
-        console.log("Bum Bum from RIGHT 💥");
+        handler(1);
         return;
       }
     }
   }
 
+  /**
+   * This is called 60 fps to draw the canvas with objects
+   * @param {*} bgImgHorizontalOffset
+   * @param {*} bgImgVerticalOffset
+   * @param {*} stone
+   * @param {*} roadrepair
+   * @param {*} coin
+   * @param {*} botCars
+   * @param {*} currentInterval
+   */
   drawCanvas(
     bgImgHorizontalOffset,
     bgImgVerticalOffset,
-    brick1,
+    stone,
+    roadrepair,
+    coin,
+    botCars,
     currentInterval
   ) {
     // 1) Draw background image
-    this._drawBgImage(bgImgHorizontalOffset, bgImgVerticalOffset);
     this._drawBgImage(
       bgImgHorizontalOffset,
-      bgImgVerticalOffset - this._canvas.height
+      bgImgVerticalOffset,
+      this._lowerBackground
     );
+    this._drawBgImage(
+      bgImgHorizontalOffset,
+      bgImgVerticalOffset - this._canvas.height,
+      this._upperBackground
+    );
+    this._adjustCanvasWidth(bgImgVerticalOffset);
+
     // 2) Draw car
     this._drawCarImage();
-    // 3) Draw bricks
+    // 3) Draw stones
+    this._drawStones(
+      bgImgHorizontalOffset,
+      bgImgVerticalOffset,
+      stone,
+      currentInterval
+    );
+    // 4) Draw road repairs
+    this._drawRoadRepairs(
+      bgImgHorizontalOffset,
+      bgImgVerticalOffset,
+      roadrepair,
+      currentInterval
+    );
+    // 5) Draw coins
+    this._drawCoins(
+      bgImgHorizontalOffset,
+      bgImgVerticalOffset,
+      coin,
+      currentInterval
+    );
+    // 6) Draw road
+    //
+  }
+
+  _adjustCanvasWidth(verticalOffset) {
     if (
-      brick1.displayInterval === currentInterval ||
-      brick1.displayInterval - 1 === currentInterval
-    )
-      this._drawBricks(
+      this._canvasLeftWidthReducedFactorNew ||
+      this._canvasRightWidthReducedFactorNew
+    ) {
+      if (verticalOffset >= this._canvas.height / 2 + this._carHeight * 2) {
+        this._canvasLeftWidthReducedFactor =
+          this._canvasLeftWidthReducedFactorNew;
+        this._canvasRightWidthReducedFactor =
+          this._canvasRightWidthReducedFactorNew;
+        this._canvasLeftWidthReducedFactorNew = undefined;
+        this._canvasRightWidthReducedFactorNew = undefined;
+      }
+    }
+  }
+
+  _drawStones(
+    bgImgHorizontalOffset,
+    bgImgVerticalOffset,
+    stone,
+    currentInterval
+  ) {
+    if (
+      stone.displayInterval === currentInterval ||
+      stone.displayInterval - 1 === currentInterval
+    ) {
+      let stoneImg = this._stone1;
+      switch (stone.type) {
+        case 1:
+          stoneImg = this._stone1;
+          break;
+        case 2:
+          stoneImg = this._stone1;
+          break;
+      }
+      this._drawObjects(
         bgImgHorizontalOffset,
         bgImgVerticalOffset,
-        brick1,
+        stone,
+        stoneImg,
         currentInterval
       );
-    // 4) Detect collision
-    if (brick1.displayInterval === currentInterval)
-      this._detectCollision(bgImgHorizontalOffset, bgImgVerticalOffset, brick1);
+    }
+  }
+
+  _drawRoadRepairs(
+    bgImgHorizontalOffset,
+    bgImgVerticalOffset,
+    roadrepair,
+    currentInterval
+  ) {
+    if (
+      roadrepair.displayInterval === currentInterval ||
+      roadrepair.displayInterval - 1 === currentInterval
+    ) {
+      let roadRepairImg = this._roadrepair1;
+      switch (roadrepair.type) {
+        case 1:
+          roadRepairImg = this._roadrepair1;
+          break;
+        case 2:
+          roadRepairImg = this._roadrepair1;
+          break;
+      }
+      this._drawObjects(
+        bgImgHorizontalOffset,
+        bgImgVerticalOffset,
+        roadrepair,
+        roadRepairImg,
+        currentInterval
+      );
+    }
+  }
+
+  _drawCoins(
+    bgImgHorizontalOffset,
+    bgImgVerticalOffset,
+    coin,
+    currentInterval
+  ) {
+    if (
+      coin.displayInterval === currentInterval ||
+      coin.displayInterval - 1 === currentInterval
+    ) {
+      this._drawObjects(
+        bgImgHorizontalOffset,
+        bgImgVerticalOffset,
+        coin,
+        this._coin,
+        currentInterval
+      );
+    }
+  }
+
+  _drawBotCar(
+    bgImgHorizontalOffset,
+    bgImgVerticalOffset,
+    botCar,
+    currentInterval
+  ) {
+    if (
+      botCar.displayInterval === currentInterval ||
+      botCar.displayInterval - 1 === currentInterval
+    ) {
+      const botCarDx =
+        botCar.dx * this._canvas.width - 100 + bgImgHorizontalOffset;
+      this._drawImage(
+        this._botCar,
+        botCarDx,
+        botCar.displayInterval === currentInterval
+          ? bgImgVerticalOffset + botCar.dy
+          : bgImgVerticalOffset - this._canvas.height,
+        botCar.width,
+        botCar.height
+      );
+    }
   }
 
   isBgImgEnd(bgImgVerticalOffset) {
-    return (
+    const isEnded =
       bgImgVerticalOffset === this._canvas.height ||
-      bgImgVerticalOffset > this._canvas.height
+      bgImgVerticalOffset > this._canvas.height;
+    return isEnded;
+  }
+
+  canMoveHorizontal(
+    bgImgHorizontalOffset,
+    turnSpeed,
+    reducedFactorLeft,
+    reducedFactorRight
+  ) {
+    // We don't change the width (in which the car can drive) too suddenly
+    // We change it once the background image reach the car
+    if (
+      this._canvasLeftWidthReducedFactor !== reducedFactorLeft ||
+      this._canvasRightWidthReducedFactor !== reducedFactorRight
+    ) {
+      this._canvasLeftWidthReducedFactorNew = reducedFactorLeft;
+      this._canvasRightWidthReducedFactorNew = reducedFactorRight;
+    }
+    return (
+      (bgImgHorizontalOffset <
+        (this._canvas.width * this._canvasLeftWidthReducedFactor) / 2 &&
+        turnSpeed > 0) ||
+      (bgImgHorizontalOffset >
+        (this._canvas.width * this._canvasRightWidthReducedFactor) / -2 &&
+        turnSpeed < 0)
     );
   }
 
-  canMoveHorizontal(bgImgHorizontalOffset, turnSpeed) {
-    return (
-      (bgImgHorizontalOffset < this._canvas.width / 2 && turnSpeed > 0) ||
-      (bgImgHorizontalOffset > this._canvas.width / -2 && turnSpeed < 0)
-    );
+  resetView(road) {
+    if (this._isSwitchingRoad) {
+      // If _isSwitchingRoad is true, we need to switch the lower background.
+      this.switchRoad(road, false);
+      this._isSwitchingRoad = false;
+    }
+  }
+
+  switchRoad(road, isUpper) {
+    // Set _isSwitchingRoad to true to remind for resetting the view
+    // which switch the lower background.
+    if (isUpper) this._isSwitchingRoad = true;
+    switch (road.type) {
+      case 1:
+        isUpper
+          ? (this._upperBackground = this._road1)
+          : (this._lowerBackground = this._road1);
+        break;
+      case 2:
+        isUpper
+          ? (this._upperBackground = this._road2)
+          : (this._lowerBackground = this._road2);
+        break;
+    }
   }
 }
 

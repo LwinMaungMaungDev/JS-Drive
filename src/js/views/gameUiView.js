@@ -2,6 +2,8 @@ class GameUiView {
   _speedBtns = document.querySelector(".speed-btns");
   _turnBtns = document.querySelector(".turn-btns");
   _playTime = document.querySelector(".play-time");
+  _healthBar = document.querySelector(".health-bar");
+  _score = document.querySelector(".score");
   _gamePlayTimer;
   _gamePlayTime = 0;
 
@@ -57,6 +59,14 @@ class GameUiView {
       this.increaseGamePlayTime.bind(this),
       1000
     );
+  }
+
+  setHealth(health) {
+    this._healthBar.innerHTML = health;
+  }
+
+  setCurrentScore(score) {
+    this._score.innerHTML = `Score: ${score}`;
   }
 }
 

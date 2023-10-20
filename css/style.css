@@ -28,6 +28,18 @@
 }
 
 /****************************************/
+/* Game Components In Middle */
+/****************************************/
+
+.section-middle-components {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translate(-50%, 0);
+  padding: 3% 0;
+}
+
+/****************************************/
 /* Game Components From Right Side */
 /****************************************/
 
