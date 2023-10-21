@@ -1,5 +1,5 @@
 /****************************************/
-/* Game Components From Left Side */
+/* Game Components (Left Side) */
 /****************************************/
 
 .section-left-components {
@@ -13,12 +13,21 @@
 }
 
 .accelerometer {
-  transform: translate(0, -10rem);
+  position: relative;
+}
+
+.accel-frame,
+.accel-line,
+.mph {
+  width: 20rem;
+  height: 20rem;
+  position: absolute;
+  transform: translate(0, 0);
 }
 
 .turn-btns {
   display: flex;
-  gap: 40px;
+  gap: 30px;
 }
 
 .btn--icon {
@@ -27,8 +36,16 @@
   color: #e67e22;
 }
 
+.mph {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  color: #fff;
+}
+
 /****************************************/
-/* Game Components In Middle */
+/* Game Components (Middle) */
 /****************************************/
 
 .section-middle-components {
@@ -40,7 +57,7 @@
 }
 
 /****************************************/
-/* Game Components From Right Side */
+/* Game Components (Right Side) */
 /****************************************/
 
 .section-right-components {
@@ -89,7 +106,7 @@
 
 .brake,
 .lever {
-  width: 100px;
+  width: 7.4rem;
 }
 
 /****************************************/

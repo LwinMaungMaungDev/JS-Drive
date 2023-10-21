@@ -4,6 +4,8 @@ class GameUiView {
   _playTime = document.querySelector(".play-time");
   _healthBar = document.querySelector(".health-bar");
   _score = document.querySelector(".score");
+  _accelerometer = document.querySelector(".mph-text");
+  _accelerometerLine = document.querySelector(".accel-line");
   _gamePlayTimer;
   _gamePlayTime = 0;
 
@@ -28,6 +30,26 @@ class GameUiView {
 
   setCurrentScore(score) {
     this._score.innerHTML = `Score: ${score}`;
+  }
+
+  ////////////////////////////////////////////////////////////////////////
+  // Accelerometer
+
+  /**
+   * Update the accelerometer kM/h and indicator level
+   * @param {number} speed Max speed should be 60 which is displayed as (60 * 5 = 300). 300 is common speed for very fast sport cars in real world.
+   * @param {number} level From 0 to 200
+   */
+  updateAccelerometer(speed, maxSpeed) {
+    // Speed
+    this._accelerometer.innerHTML = Math.round(speed * 5);
+    // Indicator
+    const level = Math.round((200 / maxSpeed) * speed);
+    const { transform } = window.getComputedStyle(this._accelerometerLine);
+    const matrixValues = transform.match(/matrix.*\((.+)\)/)[1].split(", ");
+    this._accelerometerLine.style.transform = `translate(0, ${
+      matrixValues[5]
+    }px) rotate(${level - 100}deg)`;
   }
 
   ////////////////////////////////////////////////////////////////////////

@@ -1,4 +1,4 @@
-import { SPEED_UP_RATE, SPEED_UP_INTERVAL, SLOW_DOWN_RATE } from "../config.js";
+import { SPEED_UP_INTERVAL } from "../config.js";
 import { stones } from "./gameObjects/stones.js";
 import { roadRepairs } from "./gameObjects/roadRepairs.js";
 import { coins } from "./gameObjects/coins.js";
@@ -12,6 +12,11 @@ export const state = {
     parallaxHorizontalOffset: 0,
     speedUpTimer: undefined,
     slowDownTimer: undefined,
+  },
+  car: {
+    maxSpeed: 60,
+    speedUpRate: 0.05,
+    slowDownRate: 0.2,
   },
   stone: {
     displayInterval: -1,
@@ -114,12 +119,15 @@ export const setForwardSpeed = function (speed) {
 
 export const speedUp = function () {
   const { canvas } = state;
+  const { car } = state;
   if (canvas.speedUpTimer) return;
-  if (canvas.forwardSpeed <= 0) canvas.forwardSpeed = SPEED_UP_RATE / 2;
-  canvas.speedUpTimer = setInterval(
-    () => (canvas.forwardSpeed += SPEED_UP_RATE),
-    SPEED_UP_INTERVAL * 1000
-  );
+  if (canvas.forwardSpeed <= 0) canvas.forwardSpeed = car.speedUpRate / 2;
+  canvas.speedUpTimer = setInterval(() => {
+    if (canvas.forwardSpeed < state.car.maxSpeed)
+      canvas.forwardSpeed += car.speedUpRate;
+    if (canvas.forwardSpeed > state.car.maxSpeed)
+      canvas.forwardSpeed = state.car.maxSpeed;
+  }, SPEED_UP_INTERVAL * 1000);
 };
 
 export const stopSpeedingUp = function () {
@@ -130,13 +138,14 @@ export const stopSpeedingUp = function () {
 
 export const slowDown = function () {
   const { canvas } = state;
+  const { car } = state;
   if (canvas.slowDownTimer) return;
   if (canvas.forwardSpeed >= 0) {
-    canvas.forwardSpeed -= SLOW_DOWN_RATE / 10;
+    canvas.forwardSpeed -= car.slowDownRate / 10;
     canvas.slowDownTimer = setInterval(() => {
       canvas.forwardSpeed <= 0
         ? (canvas.forwardSpeed = 0)
-        : (canvas.forwardSpeed -= SLOW_DOWN_RATE);
+        : (canvas.forwardSpeed -= car.slowDownRate);
       if (canvas.forwardSpeed < 0) _stopReset();
     }, SPEED_UP_INTERVAL * 1000);
   }

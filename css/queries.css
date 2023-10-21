@@ -13,7 +13,19 @@ Instead, 1rem = 1em = 16px  */
 
   .brake,
   .lever {
-    width: 70;
+    width: 5.2rem;
+  }
+
+  .accel-frame,
+  .accel-line,
+  .mph {
+    width: 15rem;
+    height: 15rem;
+    transform: translate(0, 3rem);
+  }
+
+  .mph {
+    font-size: 1.8rem;
   }
 }
 
@@ -29,6 +41,18 @@ Instead, 1rem = 1em = 16px  */
 
   .brake,
   .lever {
-    width: 50;
+    width: 4.4rem;
+  }
+
+  .accel-frame,
+  .accel-line,
+  .mph {
+    width: 11rem;
+    height: 11rem;
+    transform: translate(0, 10rem);
+  }
+
+  .mph {
+    font-size: 1.4rem;
   }
 }

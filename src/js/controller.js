@@ -75,7 +75,10 @@ function startCanvasAnimation() {
       _detectCollision(botCar);
   });
 
-  // 10) Loop the animation
+  // 10) Update Accelerometer
+  _updateAccelerometer();
+
+  // 11) Loop the animation
   window.requestAnimationFrame(startCanvasAnimation);
 }
 
@@ -112,6 +115,14 @@ function _handleCollision(direction) {
 function _handleCoinCollect() {
   gameState.collectCoin();
   gameUiView.setCurrentScore(gameState.state.game.score);
+}
+
+//////////////////////////////////////////////////////////////////////////////
+// Accelerometer
+function _updateAccelerometer() {
+  const { forwardSpeed } = gameState.state.canvas;
+  const { maxSpeed } = gameState.state.car;
+  gameUiView.updateAccelerometer(forwardSpeed, maxSpeed);
 }
 
 //////////////////////////////////////////////////////////////////////////////
