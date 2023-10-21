@@ -33,7 +33,7 @@
 .btn--icon {
   height: 7.4rem;
   width: 7.4rem;
-  color: #e67e22;
+  color: #800080;
 }
 
 .mph {
@@ -48,12 +48,28 @@
 /* Game Components (Middle) */
 /****************************************/
 
-.section-middle-components {
+.health-bar {
   position: absolute;
   left: 50%;
   bottom: 0;
-  transform: translate(-50%, 0);
-  padding: 3% 0;
+  padding: 2% 0;
+}
+
+.health {
+  position: absolute;
+  height: 1rem;
+  border-radius: 1rem;
+}
+
+.health-background {
+  width: 20rem;
+  background-color: grey;
+  transform: translate(-50%);
+}
+
+.health-value {
+  background-color: #800080;
+  transform: translate(-10rem);
 }
 
 /****************************************/

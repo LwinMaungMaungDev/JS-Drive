@@ -3,6 +3,7 @@ import { stones } from "./gameObjects/stones.js";
 import { roadRepairs } from "./gameObjects/roadRepairs.js";
 import { coins } from "./gameObjects/coins.js";
 import { roads } from "./gameObjects/roads.js";
+import { botCars } from "./gameObjects/botCars.js";
 
 export const state = {
   canvas: {
@@ -33,40 +34,15 @@ export const state = {
     leftOffsetReducedFactor: 0.36,
     rightOffsetReducedFactor: 0.36,
   },
-  botCars: [
-    {
-      displayInterval: 3,
-      dx: 0.5, // 0 means left-most and 1 means right-most
-      dy: 0,
-      width: 0.05,
-      height: (0.05 * 337) / 178,
-      speed: 2,
-    },
-    {
-      displayInterval: 5,
-      dx: 0.4, // 0 means left-most and 1 means right-most
-      dy: 0,
-      width: 0.05,
-      height: (0.05 * 337) / 178,
-      speed: 3,
-    },
-  ],
+  botCars: [],
   game: {
     stones,
     roadRepairs,
     coins,
-    botCars: [
-      {
-        displayInterval: 3,
-        dx: 0.8, // 0 means left-most and 1 means right-most
-        dy: 0,
-        width: 35,
-        height: (35 * 337) / 178,
-        speed: 2,
-      },
-    ],
+    botCars,
     roads,
-    health: 100,
+    health: 20,
+    maxHealth: 100,
     currentInterval: 1,
     score: 0,
   },
@@ -82,6 +58,8 @@ export const setParallaxVerticalOffset = function (offset) {
   if (offset === 0 && state.canvas.forwardSpeed > 0) {
     state.game.currentInterval++;
     _addObjects();
+    console.log(state.botCars);
+    console.log(state.game.currentInterval);
   }
 };
 
@@ -107,6 +85,22 @@ const _addObjects = function () {
     state.game.currentInterval > state.coin.displayInterval
   )
     state.coin = state.game.coins.pop();
+  // Add bot cars
+  if (state.game.botCars.length) {
+    while (
+      state.game.currentInterval + 1 >=
+      state.game.botCars[state.game.botCars.length - 1].displayInterval
+    ) {
+      state.botCars.push(state.game.botCars.pop());
+      if (!state.game.botCars.length) break;
+    }
+  }
+  // Remove bot cars
+  state.botCars.forEach((botCar, i) => {
+    if (state.game.currentInterval > botCar.displayInterval + 15) {
+      state.botCars.splice(i, 1);
+    }
+  });
 };
 
 export const setParallaxHorizontalOffset = function (offset) {
@@ -196,6 +190,9 @@ export const handleCollision = function (direction) {
     if (state.canvas.forwardSpeed) {
       // Player hit object
       state.game.health -= Math.round(state.canvas.forwardSpeed);
+      if (state.game.health < state.game.maxHealth * 0.05) {
+        state.game.health = 0;
+      }
       state.canvas.forwardSpeed = -1;
     } else {
       // Object hit player
@@ -205,6 +202,9 @@ export const handleCollision = function (direction) {
     if (state.canvas.forwardSpeed) {
       // Player hit object
       state.game.health -= Math.round(state.canvas.forwardSpeed * 0.5);
+      if (state.game.health < state.game.maxHealth * 0.05) {
+        state.game.health = 0;
+      }
       state.canvas.turnSpeed = state.canvas.forwardSpeed * -direction;
       state.canvas.forwardSpeed *= 0.9;
     } else {

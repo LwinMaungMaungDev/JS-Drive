@@ -55,4 +55,17 @@ Instead, 1rem = 1em = 16px  */
   .mph {
     font-size: 1.4rem;
   }
+
+  .health-bar {
+    padding: 4% 0;
+  }
+
+  .health-background {
+    width: 10rem;
+    height: 1rem;
+  }
+
+  .health-value {
+    transform: translate(-5rem);
+  }
 }

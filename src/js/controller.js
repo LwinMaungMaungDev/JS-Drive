@@ -108,8 +108,12 @@ function _detectCoinCollect(coin) {
 //////////////////////////////////////////////////////////////////////////////
 // Handle Collision
 function _handleCollision(direction) {
+  const { game } = gameState.state;
   gameState.handleCollision(direction);
-  gameUiView.setHealth(gameState.state.game.health);
+  if (game.health <= 0) {
+    console.log("Game Over");
+  }
+  gameUiView.updateHealthBar(game.health / game.maxHealth);
 }
 
 function _handleCoinCollect() {
@@ -163,10 +167,12 @@ function handleControlKeyPresses() {
 }
 
 const init = function () {
+  const { game } = gameState.state;
   document.ondragstart = () => false; // Prevent images dragged
   window.onload = function () {
     canvasView.initializeCanvas(startCanvasAnimation);
     gameUiView.addHandlerStartCountPlayTime();
+    gameUiView.updateHealthBar(game.health / game.maxHealth);
   };
   handleControlKeyPresses();
   gameUiView.addHandlerControlSpeed(
