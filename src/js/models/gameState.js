@@ -184,13 +184,31 @@ export const switchRoad = function () {
  */
 export const handleCollision = function (direction) {
   if (direction === 0) {
-    state.game.health -= Math.round(state.canvas.forwardSpeed);
-    state.canvas.forwardSpeed = -1;
+    if (state.canvas.forwardSpeed) {
+      // Player hit object
+      state.game.health -= Math.round(state.canvas.forwardSpeed);
+      state.canvas.forwardSpeed = -1;
+    } else {
+      // Object hit player
+      _handleObjectHitPlayerCar();
+    }
   } else {
-    state.game.health -= Math.round(state.canvas.forwardSpeed * 0.5);
-    state.canvas.turnSpeed = state.canvas.forwardSpeed * -direction;
-    state.canvas.forwardSpeed *= 0.9;
+    if (state.canvas.forwardSpeed) {
+      // Player hit object
+      state.game.health -= Math.round(state.canvas.forwardSpeed * 0.5);
+      state.canvas.turnSpeed = state.canvas.forwardSpeed * -direction;
+      state.canvas.forwardSpeed *= 0.9;
+    } else {
+      // Object hit player
+      _handleObjectHitPlayerCar(direction);
+    }
   }
+};
+
+const _handleObjectHitPlayerCar = function (direction) {
+  state.game.health -= 1;
+  state.canvas.forwardSpeed = 2;
+  state.canvas.turnSpeed = 2 * (direction ? -direction : -1);
 };
 
 /**

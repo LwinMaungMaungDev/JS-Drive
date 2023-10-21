@@ -1,0 +1,34 @@
+/* #Tip rem and em do NOT depend on html font-size in media queries! 
+Instead, 1rem = 1em = 16px  */
+
+/****************************************/
+/* BELOW 1344px (Smaller desktops) */
+/****************************************/
+
+@media (max-width: 84em) {
+  .btn--icon {
+    height: 6.2rem;
+    width: 6.2rem;
+  }
+
+  .brake,
+  .lever {
+    width: 70;
+  }
+}
+
+/****************************************/
+/* BELOW 850px (Smaller desktops) */
+/****************************************/
+
+@media (max-width: 53em) {
+  .btn--icon {
+    height: 5.2rem;
+    width: 5.2rem;
+  }
+
+  .brake,
+  .lever {
+    width: 50;
+  }
+}

@@ -68,7 +68,7 @@ class CanvasView {
   }
 
   initializeCanvas(startCanvasAnimation) {
-    this._canvas.width = window.innerWidth > 1000 ? 1000 : window.innerWidth;
+    this._canvas.width = window.innerWidth > 700 ? 700 : window.innerWidth;
     this._canvas.height = window.innerHeight;
 
     startCanvasAnimation();
