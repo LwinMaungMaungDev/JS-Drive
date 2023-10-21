@@ -33,16 +33,16 @@ export const state = {
       displayInterval: 3,
       dx: 0.5, // 0 means left-most and 1 means right-most
       dy: 0,
-      width: 35,
-      height: (35 * 337) / 178,
+      width: 0.05,
+      height: (0.05 * 337) / 178,
       speed: 2,
     },
     {
       displayInterval: 5,
       dx: 0.4, // 0 means left-most and 1 means right-most
       dy: 0,
-      width: 35,
-      height: (35 * 337) / 178,
+      width: 0.05,
+      height: (0.05 * 337) / 178,
       speed: 3,
     },
   ],
@@ -76,27 +76,32 @@ export const setParallaxVerticalOffset = function (offset) {
   // After each bg img passed, we increase the interval and prepare objects
   if (offset === 0 && state.canvas.forwardSpeed > 0) {
     state.game.currentInterval++;
-    // Add stone
-    if (
-      state.game.stones.length &&
-      state.game.currentInterval > state.stone.displayInterval
-    )
-      state.stone = state.game.stones.pop();
-    // Add road repairs
-    if (
-      state.game.roadRepairs.length &&
-      state.game.currentInterval > state.roadrepair.displayInterval
-    )
-      state.roadrepair = state.game.roadRepairs.pop();
-    // Add coins
-    if (
-      state.game.coins.length &&
-      state.game.currentInterval > state.coin.displayInterval
-    )
-      state.coin = state.game.coins.pop();
-    // Add bot cars
-    //
+    _addObjects();
   }
+};
+
+/**
+ * Add objects onto the canvas in each frame.
+ */
+const _addObjects = function () {
+  // Add stone
+  if (
+    state.game.stones.length &&
+    state.game.currentInterval > state.stone.displayInterval
+  )
+    state.stone = state.game.stones.pop();
+  // Add road repairs
+  if (
+    state.game.roadRepairs.length &&
+    state.game.currentInterval > state.roadrepair.displayInterval
+  )
+    state.roadrepair = state.game.roadRepairs.pop();
+  // Add coins
+  if (
+    state.game.coins.length &&
+    state.game.currentInterval > state.coin.displayInterval
+  )
+    state.coin = state.game.coins.pop();
 };
 
 export const setParallaxHorizontalOffset = function (offset) {
@@ -171,6 +176,12 @@ export const switchRoad = function () {
 //////////////////////////////////////////////////////////////////////////////
 // Collision Handler
 
+/**
+ * Handle the player's car collision with objects.
+ * 0 means player hits object straight from the middle.
+ * -1 and 1 means player hits object from the left or right.
+ * @param {number} direction Possible values are -1, 0, and 1.
+ */
 export const handleCollision = function (direction) {
   if (direction === 0) {
     state.game.health -= Math.round(state.canvas.forwardSpeed);
@@ -182,6 +193,9 @@ export const handleCollision = function (direction) {
   }
 };
 
+/**
+ * If the player collects coins, increase the score.
+ */
 export const collectCoin = function () {
   state.coin = state.game.coins.pop();
   state.game.score++;
@@ -190,6 +204,10 @@ export const collectCoin = function () {
 //////////////////////////////////////////////////////////////////////////////
 // Move Bot Cars
 
+/**
+ * Bot cars move themselves upward.
+ * At the same time, they move down as the player's car moves upward
+ */
 export const moveBotCars = function () {
   state.botCars.forEach((botCar, i) => {
     if (state.game.currentInterval >= botCar.displayInterval) {

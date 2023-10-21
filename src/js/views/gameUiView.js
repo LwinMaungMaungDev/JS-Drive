@@ -7,6 +7,39 @@ class GameUiView {
   _gamePlayTimer;
   _gamePlayTime = 0;
 
+  increaseGamePlayTime() {
+    this._gamePlayTime++;
+    let hour = 0;
+    let min = Math.trunc(this._gamePlayTime / 60);
+    if (min >= 60) {
+      hour = Math.trunc(min / 60);
+      min = min % 60;
+    }
+    const sec = this._gamePlayTime % 60;
+
+    this._playTime.innerHTML = `${String(hour).padStart(2, "0")}:${String(
+      min
+    ).padStart(2, "0")}:${String(sec).padStart(2, "0")}`;
+  }
+
+  setHealth(health) {
+    this._healthBar.innerHTML = health;
+  }
+
+  setCurrentScore(score) {
+    this._score.innerHTML = `Score: ${score}`;
+  }
+
+  ////////////////////////////////////////////////////////////////////////
+  // Handlers
+
+  addHandlerStartCountPlayTime() {
+    this._gamePlayTimer = setInterval(
+      this.increaseGamePlayTime.bind(this),
+      1000
+    );
+  }
+
   addHandlerControlSpeed(speedUp, stopSpeedingUp, slowDown, stopSlowDown) {
     ["mousedown", "mouseup", "mouseout"].map((event) =>
       this._speedBtns.addEventListener(event, function (e) {
@@ -37,36 +70,6 @@ class GameUiView {
         }
       })
     );
-  }
-
-  increaseGamePlayTime() {
-    this._gamePlayTime++;
-    let hour = 0;
-    let min = Math.trunc(this._gamePlayTime / 60);
-    if (min >= 60) {
-      hour = Math.trunc(min / 60);
-      min = min % 60;
-    }
-    const sec = this._gamePlayTime % 60;
-
-    this._playTime.innerHTML = `${String(hour).padStart(2, "0")}:${String(
-      min
-    ).padStart(2, "0")}:${String(sec).padStart(2, "0")}`;
-  }
-
-  addHandlerStartCountPlayTime() {
-    this._gamePlayTimer = setInterval(
-      this.increaseGamePlayTime.bind(this),
-      1000
-    );
-  }
-
-  setHealth(health) {
-    this._healthBar.innerHTML = health;
-  }
-
-  setCurrentScore(score) {
-    this._score.innerHTML = `Score: ${score}`;
   }
 }
 

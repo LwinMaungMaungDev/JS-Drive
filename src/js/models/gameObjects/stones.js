@@ -5,21 +5,21 @@ export const stones = [
     type: 1,
     displayInterval: 8,
     dx: 0.2, // 0 means left-most and 1 means right-most
-    width: 100,
-    height: (100 * 50) / 79,
+    width: 0.07,
+    height: (0.07 * 50) / 79,
   },
   {
     type: 1,
     displayInterval: 5,
     dx: 0.7,
-    width: 100,
-    height: (100 * 50) / 79,
+    width: 0.07,
+    height: (0.07 * 50) / 79,
   },
   {
     type: 1,
     displayInterval: 3,
     dx: 0.5,
-    width: 100,
-    height: (100 * 50) / 79,
+    width: 0.07,
+    height: (0.07 * 50) / 79,
   },
 ];

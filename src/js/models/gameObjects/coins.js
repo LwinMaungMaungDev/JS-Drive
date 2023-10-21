@@ -5,13 +5,13 @@ export const coins = [
   {
     displayInterval: 5,
     dx: 0.6, // 0 means left-most and 1 means right-most
-    width: 70,
-    height: 70,
+    width: 0.05,
+    height: 0.05,
   },
   {
     displayInterval: 3,
     dx: 0.4, // 0 means left-most and 1 means right-most
-    width: 70,
-    height: 70,
+    width: 0.05,
+    height: 0.05,
   },
 ];

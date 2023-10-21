@@ -97,4 +97,6 @@
 /****************************************/
 
 .section-game-window {
+  display: flex;
+  justify-content: center;
 }
