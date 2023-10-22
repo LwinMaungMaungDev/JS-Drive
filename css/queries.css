@@ -6,6 +6,16 @@ Instead, 1rem = 1em = 16px  */
 /****************************************/
 
 @media (max-width: 84em) {
+  .label {
+    font-size: 2.4rem;
+    line-height: 1.05;
+    margin-bottom: 3.2rem;
+  }
+
+  .turn-btns {
+    gap: 25px;
+  }
+
   .btn--icon {
     height: 6.2rem;
     width: 6.2rem;
@@ -34,9 +44,21 @@ Instead, 1rem = 1em = 16px  */
 /****************************************/
 
 @media (max-width: 53em) {
+  .label {
+    font-size: 2rem;
+  }
+
+  .turn-btns {
+    gap: 15px;
+  }
+
   .btn--icon {
     height: 5.2rem;
     width: 5.2rem;
+  }
+
+  .speed-btns {
+    gap: 15px;
   }
 
   .brake,
@@ -67,5 +89,29 @@ Instead, 1rem = 1em = 16px  */
 
   .health-value {
     transform: translate(-5rem);
+  }
+}
+
+/****************************************/
+/* BELOW 400px (Smaller desktops) */
+/****************************************/
+
+@media (max-width: 25em) {
+  .label {
+    font-size: 1.6rem;
+    margin-bottom: 2.4rem;
+  }
+
+  .turn-btns {
+    gap: 10px;
+  }
+
+  .btn--icon {
+    height: 4.4rem;
+    width: 4.4rem;
+  }
+
+  .speed-btns {
+    gap: 10px;
   }
 }

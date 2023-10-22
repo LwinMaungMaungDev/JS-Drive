@@ -37,3 +37,11 @@ export const calCarDimensions = function (car, canvasWidth) {
 export const responsive = function (value, canvasWidth) {
   return value * canvasWidth;
 };
+
+/**
+ * Get angle in radian by passing angle in degree
+ * @param {number} deg
+ */
+export const calcRadian = function (deg) {
+  return (deg * Math.PI) / 180;
+};

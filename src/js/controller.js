@@ -42,14 +42,7 @@ function startCanvasAnimation() {
   }
 
   // 4) With the values just calculated, redraw the canvas.
-  canvasView.drawCanvas(
-    canvas.parallaxHorizontalOffset,
-    canvas.parallaxVerticalOffset,
-    stone,
-    roadrepair,
-    coin,
-    game.currentInterval
-  );
+  canvasView.drawCanvas(canvas, stone, roadrepair, coin, game.currentInterval);
 
   // 5) Draw bot cars and move them
   canvasView.drawBotCars(

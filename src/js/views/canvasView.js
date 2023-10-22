@@ -1,4 +1,11 @@
-import { calCarDx, calCarDy, calCarDimensions, responsive } from "../helper.js";
+import {
+  calCarDx,
+  calCarDy,
+  calCarDimensions,
+  responsive,
+  calcRadian,
+} from "../helper.js";
+import { turn } from "../models/gameState.js";
 
 class CanvasView {
   _canvas = document.getElementById("canvas");
@@ -27,44 +34,37 @@ class CanvasView {
   _loadImages() {
     // Background Roads
     // 1)
-    const road1ImgUrl = new URL(
+    this._road1.src = new URL(
       "../../img/canvas/roadTest.png?as=png",
       import.meta.url
     );
-    this._road1.src = road1ImgUrl;
     // 2)
-    const road2ImgUrl = new URL(
+    this._road2.src = new URL(
       "../../img/canvas/gravelRoadTest.png?as=png",
       import.meta.url
     );
-    this._road2.src = road2ImgUrl;
     // Stone1
-    const stone1ImgUrl = new URL(
+    this._stone1.src = new URL(
       "../../img/canvas/stone1.png?as=png",
       import.meta.url
     );
-    this._stone1.src = stone1ImgUrl;
     // RoadRepair
-    const roadRepairImgUrl = new URL(
+    this._roadrepair1.src = new URL(
       "../../img/canvas/roadrepair.jpg?as=jpg",
       import.meta.url
     );
-    this._roadrepair1.src = roadRepairImgUrl;
     // Coin
-    const coinImgUrl = new URL(
+    this._coin.src = new URL(
       "../../img/canvas/coin.png?as=png",
       import.meta.url
     );
-    this._coin.src = coinImgUrl;
     // Car
-    const carImgUrl = new URL("../../img/cars/car.png?as=png", import.meta.url);
-    this._car1.src = carImgUrl;
+    this._car1.src = new URL("../../img/cars/car.png?as=png", import.meta.url);
     // BotCar
-    const botCarImgUrl = new URL(
+    this._botCar.src = new URL(
       "../../img/cars/botCar.png?as=png",
       import.meta.url
     );
-    this._botCar.src = botCarImgUrl;
   }
 
   initializeCanvas(startCanvasAnimation) {
@@ -84,14 +84,9 @@ class CanvasView {
    * @param {Object[]} botCars
    * @param {number} currentInterval
    */
-  drawCanvas(
-    parallaxHorizontalOffset,
-    parallaxVerticalOffset,
-    stone,
-    roadrepair,
-    coin,
-    currentInterval
-  ) {
+  drawCanvas(canvas, stone, roadrepair, coin, currentInterval) {
+    const { parallaxHorizontalOffset, parallaxVerticalOffset, turnSpeed } =
+      canvas;
     // 1) Draw background image
     this._drawBgImage(
       parallaxHorizontalOffset,
@@ -106,7 +101,7 @@ class CanvasView {
     this._adjustCanvasWidth(parallaxVerticalOffset);
 
     // 2) Draw car
-    this._drawCarImage();
+    this._drawCarImage(turnSpeed);
     // 3) Draw stones
     this._drawStones(
       parallaxHorizontalOffset,
@@ -141,8 +136,16 @@ class CanvasView {
    * @param {number} width The width of the image
    * @param {number} height The height of the image
    */
-  _drawImage(img, dx, dy, width, height) {
-    this._ctx.drawImage(img, dx, dy, width, height);
+  _drawImage(img, dx, dy, width, height, angle) {
+    if (angle) {
+      this._ctx.save();
+      this._ctx.translate(dx + width / 2, dy + height / 2);
+      this._ctx.rotate(calcRadian(angle));
+      this._ctx.drawImage(img, -width / 2, -height / 2, width, height);
+      this._ctx.restore();
+    } else {
+      this._ctx.drawImage(img, dx, dy, width, height);
+    }
   }
 
   /**
@@ -184,17 +187,19 @@ class CanvasView {
   }
 
   // Player's Car
-  _drawCarImage() {
+  _drawCarImage(turnSpeed) {
     const { carWidth, carHeight } = calCarDimensions(
       this._car,
       this._canvas.width
     );
+    const angle = -turnSpeed * 2;
     this._drawImage(
       this._car1,
       calCarDx(this._canvas.width, carWidth),
       calCarDy(this._canvas.height, carHeight),
       carWidth,
-      carHeight
+      carHeight,
+      angle
     );
   }
 

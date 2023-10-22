@@ -18,6 +18,7 @@ export const state = {
     maxSpeed: 60,
     speedUpRate: 0.05,
     slowDownRate: 0.2,
+    turnSpeed: 4,
   },
   stone: {
     displayInterval: -1,
@@ -58,8 +59,6 @@ export const setParallaxVerticalOffset = function (offset) {
   if (offset === 0 && state.canvas.forwardSpeed > 0) {
     state.game.currentInterval++;
     _addObjects();
-    console.log(state.botCars);
-    console.log(state.game.currentInterval);
   }
 };
 
@@ -159,11 +158,15 @@ export const stopSlowDown = function () {
 
 export const turn = function (direction) {
   const { canvas } = state;
+  const { car } = state;
   if (canvas.forwardSpeed <= 0) return;
-  if (canvas.forwardSpeed > 0) canvas.turnSpeed = direction;
-  if (canvas.forwardSpeed > 2) canvas.turnSpeed = direction * 4;
-  else if (canvas.forwardSpeed > 7)
-    canvas.turnSpeed = direction * 100 ** (1.5 / canvas.forwardSpeed);
+  if (canvas.forwardSpeed > 20) {
+    canvas.turnSpeed =
+      direction * 10000 ** (car.turnSpeed / canvas.forwardSpeed);
+  } else if (canvas.forwardSpeed > 2)
+    canvas.turnSpeed = direction * car.turnSpeed;
+  else if (canvas.forwardSpeed > 0)
+    canvas.turnSpeed = (direction * car.turnSpeed) / 2;
 };
 
 export const switchRoad = function () {
@@ -205,7 +208,8 @@ export const handleCollision = function (direction) {
       if (state.game.health < state.game.maxHealth * 0.05) {
         state.game.health = 0;
       }
-      state.canvas.turnSpeed = state.canvas.forwardSpeed * -direction;
+      state.canvas.turnSpeed =
+        state.canvas.forwardSpeed * -direction * (2 / state.car.turnSpeed);
       state.canvas.forwardSpeed *= 0.9;
     } else {
       // Object hit player
