@@ -1,8 +1,31 @@
 /****************************************/
+/* Game Menu (Middle) */
+/****************************************/
+
+.game-menu--middle {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2.4rem;
+}
+
+.game-menu--car-img {
+  width: 4.4rem;
+}
+
+.game-start-img {
+  width: 9.8rem;
+}
+
+/****************************************/
 /* Game Components (Left Side) */
 /****************************************/
 
-.section-left-components {
+.game-left-components {
   position: absolute;
   left: 0;
   height: 100%;
@@ -76,7 +99,7 @@
 /* Game Components (Right Side) */
 /****************************************/
 
-.section-right-components {
+.game-right-components {
   position: absolute;
   right: 0;
   height: 100%;
@@ -110,26 +133,16 @@
   gap: 20px;
 }
 
-.btn {
-  background: none;
-  border: none;
-  font-family: inherit;
-  font-size: 1.8rem;
-  text-transform: uppercase;
-  cursor: pointer;
-  font-weight: 400;
-}
-
 .brake,
 .lever {
   width: 7.4rem;
 }
 
 /****************************************/
-/* Game Window */
+/* Game Canvas */
 /****************************************/
 
-.section-game-window {
+.game-canvas {
   display: flex;
   justify-content: center;
 }

@@ -5,11 +5,12 @@ import {
   responsive,
   calcRadian,
 } from "../helper.js";
-import { turn } from "../models/gameState.js";
 
-class CanvasView {
-  _canvas = document.getElementById("canvas");
-  _ctx = this._canvas.getContext("2d");
+import View from "./View.js";
+
+class CanvasView extends View {
+  _parentElement = document.querySelector(".game-canvas");
+
   _road1 = new Image();
   _road2 = new Image();
   _stone1 = new Image();
@@ -28,6 +29,7 @@ class CanvasView {
   _car = { width: 0.04, heightWidthRatio: 128 / 53 };
 
   constructor() {
+    super();
     this._loadImages();
   }
 
@@ -67,7 +69,16 @@ class CanvasView {
     );
   }
 
+  _generateMarkup() {
+    // You can use _data here
+    return `
+      <canvas id="canvas"></canvas>
+    `;
+  }
+
   initializeCanvas(startCanvasAnimation) {
+    this._canvas = document.getElementById("canvas");
+    this._ctx = this._canvas.getContext("2d");
     this._canvas.width = window.innerWidth > 700 ? 700 : window.innerWidth;
     this._canvas.height = window.innerHeight;
 

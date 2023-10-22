@@ -1,5 +1,6 @@
 import canvasView from "./views/canvasView.js";
 import gameUiView from "./views/gameUiView.js";
+import gameMenuView from "./views/gameMenuView.js";
 
 import * as gameState from "./models/gameState.js";
 
@@ -123,6 +124,30 @@ function _updateAccelerometer() {
 }
 
 //////////////////////////////////////////////////////////////////////////////
+// Handling Events
+
+/**
+ * When the start button is pressed, remove the game menu and load the game canvas
+ */
+function handleGameStartEvent() {
+  const { game } = gameState.state;
+  gameMenuView.clear();
+  canvasView.render("data"); // Can pass data here for markup
+  gameUiView.render("data"); // Can pass data here for markup
+  canvasView.initializeCanvas(startCanvasAnimation);
+  handleControlKeyPresses();
+  gameUiView.addHandlerStartCountPlayTime();
+  gameUiView.updateHealthBar(game.health / game.maxHealth);
+  gameUiView.addHandlerControlSpeed(
+    gameState.speedUp,
+    gameState.stopSpeedingUp,
+    gameState.slowDown,
+    gameState.stopSlowDown
+  );
+  gameUiView.addHandlerControlTurn(gameState.turn);
+}
+
+//////////////////////////////////////////////////////////////////////////////
 // Handling Keyboard presses
 
 function handleControlKeyPresses() {
@@ -160,21 +185,9 @@ function handleControlKeyPresses() {
 }
 
 const init = function () {
-  const { game } = gameState.state;
   document.ondragstart = () => false; // Prevent images dragged
-  window.onload = function () {
-    canvasView.initializeCanvas(startCanvasAnimation);
-    gameUiView.addHandlerStartCountPlayTime();
-    gameUiView.updateHealthBar(game.health / game.maxHealth);
-  };
-  handleControlKeyPresses();
-  gameUiView.addHandlerControlSpeed(
-    gameState.speedUp,
-    gameState.stopSpeedingUp,
-    gameState.slowDown,
-    gameState.stopSlowDown
-  );
-  gameUiView.addHandlerControlTurn(gameState.turn);
+  gameMenuView.render("car1"); // Can pass data here for the markup
+  gameMenuView.addHandlerGameStart(handleGameStartEvent);
 };
 
 init();

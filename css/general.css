@@ -75,3 +75,13 @@ body {
 /****************************************/
 /* GENERAL REUSEABLE COMPONENTS */
 /****************************************/
+
+.btn {
+  background: none;
+  border: none;
+  font-family: inherit;
+  font-size: 1.8rem;
+  text-transform: uppercase;
+  cursor: pointer;
+  font-weight: 400;
+}

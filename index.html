@@ -19,75 +19,95 @@
   <body>
     <header></header>
     <main>
-      <section class="section-left-components">
-        <div class="label"><time class="play-time">00:00</time></div>
-        <div class="accelerometer">
+      <section class="game-menu">
+        <!-- <div class="game-menu--middle">
           <img
-            class="accel-frame"
-            src="./src/img/accelerometer/accelerometerFrame.png"
-            alt="Car Accelerometer Box"
+            class="game-menu--car-img"
+            src="./src/img/cars/car.png"
+            alt="Selected Car"
           />
-          <img
-            class="accel-line"
-            src="./src/img/accelerometer/accelerometerLine.png"
-            alt="Car Accelerometer Level Indicator"
-          />
-          <div class="mph">
-            <p class="mph-text">123</p>
+          <button class="btn btn-start">
+            <img
+              class="game-start-img"
+              src="./src/img/btn/startBtn.png"
+              alt="Start Button"
+            />
+          </button>
+        </div> -->
+      </section>
+      <section class="game-window">
+        <div class="game-ui">
+          <!-- <div class="game-left-components">
+          <div class="label"><time class="play-time">00:00</time></div>
+          <div class="accelerometer">
+            <img
+              class="accel-frame"
+              src="./src/img/accelerometer/accelerometerFrame.png"
+              alt="Car Accelerometer Box"
+            />
+            <img
+              class="accel-line"
+              src="./src/img/accelerometer/accelerometerLine.png"
+              alt="Car Accelerometer Level Indicator"
+            />
+            <div class="mph">
+              <p class="mph-text">123</p>
+            </div>
           </div>
+          <div class="turn-btns">
+            <button class="btn btn--turn-left">
+              <svg class="btn--icon">
+                <use
+                  href="src/img/icons.svg#icon-caret-back-circle-outline"
+                ></use>
+              </svg>
+            </button>
+            <button class="btn btn--turn-right">
+              <svg class="btn--icon">
+                <use
+                  href="src/img/icons.svg#icon-caret-forward-circle-outline"
+                ></use>
+              </svg>
+            </button>
+          </div> 
         </div>
-        <div class="turn-btns">
-          <button class="btn btn--turn-left">
-            <svg class="btn--icon">
-              <use
-                href="src/img/icons.svg#icon-caret-back-circle-outline"
-              ></use>
-            </svg>
-          </button>
-          <button class="btn btn--turn-right">
-            <svg class="btn--icon">
-              <use
-                href="src/img/icons.svg#icon-caret-forward-circle-outline"
-              ></use>
-            </svg>
-          </button>
+        <div class="game-middle-components">
+          <div class="health-bar">
+            <div class="health health-background"></div>
+            <div class="health health-value"></div>
+          </div> 
+        </div>  
+        <div class="game-right-components">
+            <div class="high-score-pause-container">
+            <p class="high-score label">High Score: 0</p>
+            <p class="score label">Score: 0</p>
+            <button class="btn">
+              <svg class="btn--icon">
+                <use href="src/img/icons.svg#icon-pause-circle-outline"></use>
+              </svg>
+            </button>
+          </div>
+          <div class="speed-btns">
+            <button class="btn btn--brake">
+              <img
+                class="brake"
+                src="src/img/btn/brake.png"
+                alt="Car Brake Pedal"
+              />
+            </button>
+            <button class="btn btn--lever">
+              <img
+                class="lever"
+                src="src/img/btn/lever.png"
+                alt="Car Lever Pedal"
+              />
+            </button>
+          </div> 
+        </div> -->
         </div>
-      </section>
-      <section class="section-middle-components">
-        <div class="health-bar">
-          <div class="health health-background"></div>
-          <div class="health health-value"></div>
+        <div class="game-canvas">
+          <!-- <canvas id="canvas"></canvas> -->
         </div>
-      </section>
-      <section class="section-right-components">
-        <div class="high-score-pause-container">
-          <p class="high-score label">High Score: 0</p>
-          <p class="score label">Score: 0</p>
-          <button class="btn">
-            <svg class="btn--icon">
-              <use href="src/img/icons.svg#icon-pause-circle-outline"></use>
-            </svg>
-          </button>
-        </div>
-        <div class="speed-btns">
-          <button class="btn btn--brake">
-            <img
-              class="brake"
-              src="src/img/btn/brake.png"
-              alt="Car Brake Pedal"
-            />
-          </button>
-          <button class="btn btn--lever">
-            <img
-              class="lever"
-              src="src/img/btn/lever.png"
-              alt="Car Lever Pedal"
-            />
-          </button>
-        </div>
-      </section>
-      <section class="section-game-window">
-        <canvas id="canvas"></canvas>
       </section>
     </main>
     <footer></footer>
