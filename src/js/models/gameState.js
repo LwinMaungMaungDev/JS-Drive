@@ -37,6 +37,7 @@ export const state = {
   },
   botCars: [],
   game: {
+    pause: false,
     stones,
     roadRepairs,
     coins,
@@ -46,7 +47,24 @@ export const state = {
     maxHealth: 100,
     currentInterval: 1,
     score: 0,
+    playTime: 0,
+    gamePlayTimer: undefined,
   },
+};
+
+//////////////////////////////////////////////////////////////////////////////
+// Game
+
+export const pauseGame = function (value) {
+  state.game.pause = value;
+  clearInterval(state.game.gamePlayTimer);
+};
+
+export const startCountPlayTime = function (updateGamePlayTime) {
+  state.game.gamePlayTimer = setInterval(function () {
+    state.game.playTime++;
+    updateGamePlayTime(state.game.playTime);
+  }, 1000);
 };
 
 //////////////////////////////////////////////////////////////////////////////

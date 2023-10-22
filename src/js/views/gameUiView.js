@@ -4,8 +4,10 @@ import View from "./View.js";
 
 class GameUiView extends View {
   _parentElement = document.querySelector(".game-ui");
-  _gamePlayTimer;
-  _gamePlayTime = 0;
+  _overlayElement = document.querySelector(".overlay");
+  _gamePauseWindow = document.querySelector(".game-pause-window");
+  _gameResumeBtn = document.querySelector(".btn-resume");
+  _gameQuitBtn = document.querySelector(".btn-quit");
   _healthBlinkTimer;
 
   _accelerometerFrameImg = new Image();
@@ -45,7 +47,7 @@ class GameUiView extends View {
     // You can use _data here
     return `
         <div class="game-left-components">
-          <div class="label"><time class="play-time">00:00</time></div>
+          <div class="label"><time class="play-time">00:00:00</time></div>
           <div class="accelerometer">
             <img
               class="accel-frame"
@@ -88,7 +90,7 @@ class GameUiView extends View {
           <div class="high-score-pause-container">
             <p class="high-score label">High Score: 0</p>
             <p class="score label">Score: 0</p>
-            <button class="btn">
+            <button class="btn btn--pause">
               <svg class="btn--icon">
                 <use href="${icons}#icon-pause-circle-outline"></use>
               </svg>
@@ -114,15 +116,14 @@ class GameUiView extends View {
     `;
   }
 
-  increaseGamePlayTime() {
-    this._gamePlayTime++;
+  updateGamePlayTime(gamePlayTime) {
     let hour = 0;
-    let min = Math.trunc(this._gamePlayTime / 60);
+    let min = Math.trunc(gamePlayTime / 60);
     if (min >= 60) {
       hour = Math.trunc(min / 60);
       min = min % 60;
     }
-    const sec = this._gamePlayTime % 60;
+    const sec = gamePlayTime % 60;
 
     this._parentElement.querySelector(".play-time").innerHTML = `${String(
       hour
@@ -189,13 +190,6 @@ class GameUiView extends View {
   ////////////////////////////////////////////////////////////////////////
   // Handlers
 
-  addHandlerStartCountPlayTime() {
-    this._gamePlayTimer = setInterval(
-      this.increaseGamePlayTime.bind(this),
-      1000
-    );
-  }
-
   addHandlerControlSpeed(speedUp, stopSpeedingUp, slowDown, stopSlowDown) {
     ["mousedown", "mouseup", "mouseout"].map((event) =>
       this._parentElement.addEventListener(event, function (e) {
@@ -226,6 +220,57 @@ class GameUiView extends View {
         }
       })
     );
+  }
+
+  _toggleHiddenGamePauseWindow() {
+    this._overlayElement.classList.toggle("hidden");
+    this._gamePauseWindow.classList.toggle("hidden");
+  }
+
+  // *** Pause ***
+
+  addHandlerGamePause(handler) {
+    this._parentElement.addEventListener(
+      "click",
+      this._pauseGame.bind(this, handler)
+    );
+  }
+
+  _pauseGame(handler, e) {
+    const el = e.target.closest(".btn");
+    if (!el) return;
+    if (el.classList.contains("btn--pause")) {
+      this._toggleHiddenGamePauseWindow();
+      handler();
+    }
+  }
+
+  // *** Resume ***
+
+  addHandlerGameResume(handler) {
+    this._gameResumeBtn.addEventListener(
+      "click",
+      this._resumeGame.bind(this, handler)
+    );
+  }
+
+  _resumeGame(handler) {
+    this._toggleHiddenGamePauseWindow();
+    handler();
+  }
+
+  // *** Quit ***
+
+  addHandlerGameQuit(handler) {
+    this._gameQuitBtn.addEventListener(
+      "click",
+      this._quitGame.bind(this, handler)
+    );
+  }
+
+  _quitGame(handler) {
+    this._toggleHiddenGamePauseWindow();
+    handler();
   }
 }
 

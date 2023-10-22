@@ -56,7 +56,7 @@
 .btn--icon {
   height: 7.4rem;
   width: 7.4rem;
-  color: #800080;
+  color: #194cb2;
 }
 
 .mph {
@@ -91,7 +91,7 @@
 }
 
 .health-value {
-  background-color: #800080;
+  background-color: #194cb2;
   transform: translate(-10rem);
 }
 
@@ -145,4 +145,47 @@
 .game-canvas {
   display: flex;
   justify-content: center;
+}
+
+/****************************************/
+/* Game Pause */
+/****************************************/
+
+.game-pause-window {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  border-radius: 9px;
+
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  column-gap: 2.4rem;
+  row-gap: 2.4rem;
+  padding: 5rem 6rem;
+  box-shadow: 0 4rem 6rem rgba(0, 0, 0, 0.25);
+  z-index: 1000;
+  transition: all 0.5s;
+}
+
+.game-pause-title {
+  grid-column: span 2;
+  text-align: center;
+}
+
+.btn-resume {
+  border-radius: 9px;
+  background-color: #194cb2;
+  color: #fff;
+
+  padding: 1rem 2.4rem;
+}
+
+.btn-quit {
+  border-radius: 9px;
+  background-color: #f00;
+  color: #fff;
+
+  padding: 1rem 2.4rem;
 }

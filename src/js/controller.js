@@ -15,6 +15,9 @@ function startCanvasAnimation() {
   const { coin } = gameState.state;
   const { road } = gameState.state;
   const { botCars } = gameState.state;
+
+  if (game.pause) return;
+
   // 1) If there is some forwardSpeed, this will move the canvas down or the car up.
   gameState.setParallaxVerticalOffset(
     canvas.parallaxVerticalOffset + canvas.forwardSpeed
@@ -131,12 +134,21 @@ function _updateAccelerometer() {
  */
 function handleGameStartEvent() {
   const { game } = gameState.state;
+  // 1) Clear Game Menu
   gameMenuView.clear();
+
+  // Render game canvas and ui buttons
   canvasView.render("data"); // Can pass data here for markup
   gameUiView.render("data"); // Can pass data here for markup
+
+  // Start canvas animations
   canvasView.initializeCanvas(startCanvasAnimation);
-  handleControlKeyPresses();
-  gameUiView.addHandlerStartCountPlayTime();
+
+  // Activate game play timer
+  gameState.startCountPlayTime(updateGamePlayTime);
+
+  // Activate listeners
+  _handleControlKeyPresses();
   gameUiView.updateHealthBar(game.health / game.maxHealth);
   gameUiView.addHandlerControlSpeed(
     gameState.speedUp,
@@ -145,15 +157,41 @@ function handleGameStartEvent() {
     gameState.stopSlowDown
   );
   gameUiView.addHandlerControlTurn(gameState.turn);
+  gameUiView.addHandlerGamePause(_handleGamePause);
+  gameUiView.addHandlerGameResume(_handleGameResume);
+  gameUiView.addHandlerGameQuit(_handleGameQuit);
+}
+
+function _handleGamePause() {
+  gameState.pauseGame(true);
+  gameState.stopSpeedingUp();
+  gameState.stopSlowDown();
+}
+
+function _handleGameResume() {
+  gameState.pauseGame(false);
+  gameState.startCountPlayTime(updateGamePlayTime);
+  startCanvasAnimation();
+}
+
+function _handleGameQuit() {
+  console.log("Quit");
+}
+
+function updateGamePlayTime() {
+  gameUiView.updateGamePlayTime(gameState.state.game.playTime);
 }
 
 //////////////////////////////////////////////////////////////////////////////
 // Handling Keyboard presses
 
-function handleControlKeyPresses() {
+function _handleControlKeyPresses() {
   ["keydown", "keyup"].map((event) => {
     const isKeydown = event === "keydown";
     document.addEventListener(event, function (e) {
+      console.log(gameState.state.game.pause);
+      if (gameState.state.game.pause) return;
+
       switch (e.key) {
         case "w":
           if (e.repeat) return;
