@@ -15,6 +15,7 @@ function startCanvasAnimation() {
   const { coin } = gameState.state;
   const { road } = gameState.state;
   const { botCars } = gameState.state;
+  const { car } = gameState.state;
 
   if (game.pause) return;
 
@@ -46,7 +47,14 @@ function startCanvasAnimation() {
   }
 
   // 4) With the values just calculated, redraw the canvas.
-  canvasView.drawCanvas(canvas, stone, roadrepair, coin, game.currentInterval);
+  canvasView.drawCanvas(
+    canvas,
+    stone,
+    roadrepair,
+    coin,
+    car,
+    game.currentInterval
+  );
 
   // 5) Draw bot cars and move them
   canvasView.drawBotCars(
@@ -83,22 +91,26 @@ function startCanvasAnimation() {
 // Detect Collision
 
 function _detectCollision(object) {
+  const { car } = gameState.state;
   const { canvas } = gameState.state;
   canvasView.detectCollision(
     canvas.parallaxHorizontalOffset,
     canvas.parallaxVerticalOffset,
     object,
-    _handleCollision
+    _handleCollision,
+    car
   );
 }
 
 function _detectCoinCollect(coin) {
+  const { car } = gameState.state;
   const { canvas } = gameState.state;
   canvasView.detectCollision(
     canvas.parallaxHorizontalOffset,
     canvas.parallaxVerticalOffset,
     coin,
-    _handleCoinCollect
+    _handleCoinCollect,
+    car
   );
 }
 
@@ -175,11 +187,28 @@ function _handleGameResume() {
 }
 
 function _handleGameQuit() {
-  console.log("Quit");
+  gameState.initializeGameStates();
+  canvasView.clear();
+  gameUiView.clear();
+  gameMenuView.render(gameState.state.car);
+  gameMenuView.goToSlide(gameState.state.car.id);
 }
 
 function updateGamePlayTime() {
   gameUiView.updateGamePlayTime(gameState.state.game.playTime);
+}
+
+// Car Slider
+function handleNextCar() {
+  gameState.nextCar();
+  gameMenuView.goToSlide(gameState.state.car.id);
+  gameMenuView.update(gameState.state.car);
+}
+
+function handlePrevCar() {
+  gameState.prevCar();
+  gameMenuView.goToSlide(gameState.state.car.id);
+  gameMenuView.update(gameState.state.car);
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -189,7 +218,6 @@ function _handleControlKeyPresses() {
   ["keydown", "keyup"].map((event) => {
     const isKeydown = event === "keydown";
     document.addEventListener(event, function (e) {
-      console.log(gameState.state.game.pause);
       if (gameState.state.game.pause) return;
 
       switch (e.key) {
@@ -224,8 +252,10 @@ function _handleControlKeyPresses() {
 
 const init = function () {
   document.ondragstart = () => false; // Prevent images dragged
-  gameMenuView.render("car1"); // Can pass data here for the markup
-  gameMenuView.addHandlerGameStart(handleGameStartEvent);
+  gameState.initializeGameStates();
+  gameMenuView.render(gameState.state.car);
+  gameMenuView.addHandler(handleGameStartEvent, handleNextCar, handlePrevCar);
+  gameMenuView.goToSlide(gameState.state.car.id);
 };
 
 init();

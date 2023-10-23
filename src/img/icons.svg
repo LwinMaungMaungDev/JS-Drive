@@ -12,5 +12,11 @@
       <path d="M448 256c0-106-86-192-192-192S64 150 64 256s86 192 192 192 192-86 192-192z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/></path>
       <path d="M208 192v128M304 192v128" fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32"/>
     </symbol>
+    <symbol id="icon-caret-down-outline" viewBox="0 0 512 512">
+      <path d="M 98 190.06 l 139.78 163.12 a 24 24 0 0 0 36.44 0 L 414 190.06 c 13.34 -15.57 2.28 -39.62 -18.22 -39.62 h -279.6 c -20.5 0 -31.56 24.05 -18.18 39.62 Z" fill="currentColor" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/></path>
+    </symbol>
+    <symbol id="icon-caret-up-outline" viewBox="0 0 512 512">
+      <path d="M 414 321.94 L 274.22 158.82 a 24 24 0 0 0 -36.44 0 L 98 321.94 c -13.34 15.57 -2.28 39.62 18.22 39.62 h 279.6 c 20.5 0 31.56 -24.05 18.18 -39.62 Z" fill="currentColor" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/></path>
+    </symbol>
   </defs>
 </svg>

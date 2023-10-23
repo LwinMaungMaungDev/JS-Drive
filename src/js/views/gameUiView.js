@@ -222,9 +222,14 @@ class GameUiView extends View {
     );
   }
 
-  _toggleHiddenGamePauseWindow() {
-    this._overlayElement.classList.toggle("hidden");
-    this._gamePauseWindow.classList.toggle("hidden");
+  _hideGamePauseWindow() {
+    this._overlayElement.classList.add("hidden");
+    this._gamePauseWindow.classList.add("hidden");
+  }
+
+  _showGamePauseWindow() {
+    this._overlayElement.classList.remove("hidden");
+    this._gamePauseWindow.classList.remove("hidden");
   }
 
   // *** Pause ***
@@ -240,7 +245,7 @@ class GameUiView extends View {
     const el = e.target.closest(".btn");
     if (!el) return;
     if (el.classList.contains("btn--pause")) {
-      this._toggleHiddenGamePauseWindow();
+      this._showGamePauseWindow();
       handler();
     }
   }
@@ -255,7 +260,7 @@ class GameUiView extends View {
   }
 
   _resumeGame(handler) {
-    this._toggleHiddenGamePauseWindow();
+    this._hideGamePauseWindow();
     handler();
   }
 
@@ -269,7 +274,7 @@ class GameUiView extends View {
   }
 
   _quitGame(handler) {
-    this._toggleHiddenGamePauseWindow();
+    this._hideGamePauseWindow();
     handler();
   }
 }

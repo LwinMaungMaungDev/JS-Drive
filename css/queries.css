@@ -6,6 +6,8 @@ Instead, 1rem = 1em = 16px  */
 /****************************************/
 
 @media (max-width: 84em) {
+  /* Game */
+
   .label {
     font-size: 2.4rem;
     line-height: 1.05;
@@ -40,10 +42,19 @@ Instead, 1rem = 1em = 16px  */
 }
 
 /****************************************/
-/* BELOW 850px (Smaller desktops) */
+/* BELOW 850px */
 /****************************************/
 
 @media (max-width: 53em) {
+  /* Game Menu */
+
+  .game-menu--middle {
+    width: 70%;
+    gap: 15px;
+  }
+
+  /* Game */
+
   .label {
     font-size: 2rem;
   }
@@ -93,10 +104,63 @@ Instead, 1rem = 1em = 16px  */
 }
 
 /****************************************/
-/* BELOW 400px (Smaller desktops) */
+/* BELOW 600px */
+/****************************************/
+
+@media (max-width: 37.5em) {
+  /* Game Menu */
+
+  .game-menu--middle {
+    width: 90%;
+    gap: 10px;
+  }
+
+  .car-specs-heading {
+    font-size: 2rem;
+    margin-bottom: 9.6px;
+  }
+
+  .car-specs-list {
+    font-size: 1.4rem;
+  }
+
+  .game-start-img {
+    width: 7.4rem;
+  }
+}
+
+/****************************************/
+/* BELOW 400px */
 /****************************************/
 
 @media (max-width: 25em) {
+  /* General */
+
+  .heading-primary {
+    font-size: 2.4rem;
+    line-height: 1.05;
+    margin-bottom: 6.4rem;
+  }
+
+  .heading-secondary {
+    font-size: 1.8rem;
+    line-height: 1.2;
+    margin-bottom: 1.6rem;
+  }
+
+  /* Game Menu */
+
+  .car-specs-heading {
+    font-size: 1.6rem;
+    margin-bottom: 9.6px;
+  }
+
+  .car-specs-list {
+    font-size: 1.2rem;
+  }
+
+  /* Game */
+
   .label {
     font-size: 1.6rem;
     margin-bottom: 2.4rem;

@@ -7,14 +7,77 @@
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2.4rem;
+  width: 50%;
+  display: grid;
+  grid-template: 1fr auto 1fr / auto auto auto;
+  gap: 20px;
 }
 
-.game-menu--car-img {
+.game-menu-heading {
+  grid-column: 1 / span 3;
+  grid-row: 1;
+  text-align: center;
+}
+
+.btns--change-car {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: end;
+  grid-row: 2;
+}
+
+/* Slider */
+
+.slider-cars {
+  width: 100%;
+  height: 100%;
+  grid-column: 2;
+  grid-row: 2;
+  justify-self: center;
+  align-self: center;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.slide-car-img {
+  position: absolute;
   width: 4.4rem;
+  height: 4.4rem * 128 / 53;
+
+  transition: transform 1s;
+}
+
+.car-specs {
+  grid-column: 3;
+  grid-row: 2;
+  align-self: center;
+}
+
+.car-specs-heading {
+  font-size: 2.4rem;
+  margin-bottom: 9.6px;
+}
+
+.car-specs-list {
+  list-style: none;
+  font-size: 1.6rem;
+}
+
+.car-specs-list li {
+  margin-bottom: 4px;
+}
+
+.start-button {
+  grid-column: 1 / -1;
+  grid-row: 3;
+  margin-top: 25px;
+
+  text-align: center;
 }
 
 .game-start-img {

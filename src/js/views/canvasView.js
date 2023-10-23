@@ -14,19 +14,20 @@ class CanvasView extends View {
   _road1 = new Image();
   _road2 = new Image();
   _stone1 = new Image();
+  _car0 = new Image();
   _car1 = new Image();
+  _car2 = new Image();
+  _car3 = new Image();
   _roadrepair1 = new Image();
   _coin = new Image();
   _botCar = new Image();
-  _upperBackground = this._road1;
-  _lowerBackground = this._road1;
+  _upperBackground;
+  _lowerBackground;
   _isSwitchingRoad = false;
   _canvasLeftWidthReducedFactor = 0.36;
   _canvasRightWidthReducedFactor = 0.36;
   _canvasLeftWidthReducedFactorNew;
   _canvasRightWidthReducedFactorNew;
-
-  _car = { width: 0.04, heightWidthRatio: 128 / 53 };
 
   constructor() {
     super();
@@ -60,11 +61,26 @@ class CanvasView extends View {
       "../../img/canvas/coin.png?as=png",
       import.meta.url
     );
-    // Car
-    this._car1.src = new URL("../../img/cars/car.png?as=png", import.meta.url);
+    // Cars
+    this._car0.src = new URL(
+      "../../img/cars/red-car1.png?as=png",
+      import.meta.url
+    );
+    this._car1.src = new URL(
+      "../../img/cars/yellow-car1.png?as=png",
+      import.meta.url
+    );
+    this._car2.src = new URL(
+      "../../img/cars/truck.png?as=png",
+      import.meta.url
+    );
+    this._car3.src = new URL(
+      "../../img/cars/white-car1.png?as=png",
+      import.meta.url
+    );
     // BotCar
     this._botCar.src = new URL(
-      "../../img/cars/botCar.png?as=png",
+      "../../img/cars/red-car2.png?as=png",
       import.meta.url
     );
   }
@@ -82,6 +98,17 @@ class CanvasView extends View {
     this._canvas.width = window.innerWidth > 700 ? 700 : window.innerWidth;
     this._canvas.height = window.innerHeight;
 
+    // Reset Values
+    this._upperBackground = this._road1;
+    this._lowerBackground = this._road1;
+
+    this._isSwitchingRoad = false;
+    this._canvasLeftWidthReducedFactor = 0.36;
+    this._canvasRightWidthReducedFactor = 0.36;
+    this._canvasLeftWidthReducedFactorNew;
+    this._canvasRightWidthReducedFactorNew;
+    //
+
     startCanvasAnimation();
   }
 
@@ -95,7 +122,7 @@ class CanvasView extends View {
    * @param {Object[]} botCars
    * @param {number} currentInterval
    */
-  drawCanvas(canvas, stone, roadrepair, coin, currentInterval) {
+  drawCanvas(canvas, stone, roadrepair, coin, car, currentInterval) {
     const { parallaxHorizontalOffset, parallaxVerticalOffset, turnSpeed } =
       canvas;
     // 1) Draw background image
@@ -109,10 +136,10 @@ class CanvasView extends View {
       parallaxVerticalOffset - this._canvas.height,
       this._upperBackground
     );
-    this._adjustCanvasWidth(parallaxVerticalOffset);
+    this._adjustCanvasWidth(parallaxVerticalOffset, car);
 
     // 2) Draw car
-    this._drawCarImage(turnSpeed);
+    this._drawCarImage(turnSpeed, car);
     // 3) Draw stones
     this._drawStones(
       parallaxHorizontalOffset,
@@ -198,14 +225,28 @@ class CanvasView extends View {
   }
 
   // Player's Car
-  _drawCarImage(turnSpeed) {
-    const { carWidth, carHeight } = calCarDimensions(
-      this._car,
-      this._canvas.width
-    );
+  _drawCarImage(turnSpeed, car) {
+    const { carWidth, carHeight } = calCarDimensions(car, this._canvas.width);
     const angle = -turnSpeed * 2;
+
+    let carImg;
+    switch (car.id) {
+      case 0:
+        carImg = this._car0;
+        break;
+      case 1:
+        carImg = this._car1;
+        break;
+      case 2:
+        carImg = this._car2;
+        break;
+      case 3:
+        carImg = this._car3;
+        break;
+    }
+
     this._drawImage(
-      this._car1,
+      carImg,
       calCarDx(this._canvas.width, carWidth),
       calCarDy(this._canvas.height, carHeight),
       carWidth,
@@ -345,12 +386,12 @@ class CanvasView extends View {
    * This function adjust this canvas width
    * @param {number} parallaxVerticalOffset
    */
-  _adjustCanvasWidth(parallaxVerticalOffset) {
+  _adjustCanvasWidth(parallaxVerticalOffset, car) {
     if (
       this._canvasLeftWidthReducedFactorNew ||
       this._canvasRightWidthReducedFactorNew
     ) {
-      const { _, carHeight } = calCarDimensions(this._car, this._canvas.width);
+      const { _, carHeight } = calCarDimensions(car, this._canvas.width);
       if (parallaxVerticalOffset >= this._canvas.height - carHeight * 2) {
         this._canvasLeftWidthReducedFactor =
           this._canvasLeftWidthReducedFactorNew;
@@ -457,12 +498,10 @@ class CanvasView extends View {
     parallaxHorizontalOffset,
     parallaxVerticalOffset,
     object,
-    handler
+    handler,
+    car
   ) {
-    const { carWidth, carHeight } = calCarDimensions(
-      this._car,
-      this._canvas.width
-    );
+    const { carWidth, carHeight } = calCarDimensions(car, this._canvas.width);
     const carDx = calCarDx(this._canvas.width, carWidth);
     const carDy = calCarDy(this._canvas.height, carHeight);
     const objectDx = object.dx * this._canvas.width + parallaxHorizontalOffset;

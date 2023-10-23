@@ -4,53 +4,9 @@ import { roadRepairs } from "./gameObjects/roadRepairs.js";
 import { coins } from "./gameObjects/coins.js";
 import { roads } from "./gameObjects/roads.js";
 import { botCars } from "./gameObjects/botCars.js";
+import { cars } from "./gameObjects/cars.js";
 
-export const state = {
-  canvas: {
-    forwardSpeed: 0,
-    turnSpeed: 0,
-    parallaxVerticalOffset: 0,
-    parallaxHorizontalOffset: 0,
-    speedUpTimer: undefined,
-    slowDownTimer: undefined,
-  },
-  car: {
-    maxSpeed: 60,
-    speedUpRate: 0.05,
-    slowDownRate: 0.2,
-    turnSpeed: 4,
-  },
-  stone: {
-    displayInterval: -1,
-  },
-  roadrepair: {
-    displayInterval: -1,
-  },
-  coin: {
-    displayInterval: -1,
-  },
-  road: {
-    type: 1,
-    displayInterval: -1,
-    leftOffsetReducedFactor: 0.36,
-    rightOffsetReducedFactor: 0.36,
-  },
-  botCars: [],
-  game: {
-    pause: false,
-    stones,
-    roadRepairs,
-    coins,
-    botCars,
-    roads,
-    health: 20,
-    maxHealth: 100,
-    currentInterval: 1,
-    score: 0,
-    playTime: 0,
-    gamePlayTimer: undefined,
-  },
-};
+export const state = {};
 
 //////////////////////////////////////////////////////////////////////////////
 // Game
@@ -65,6 +21,84 @@ export const startCountPlayTime = function (updateGamePlayTime) {
     state.game.playTime++;
     updateGamePlayTime(state.game.playTime);
   }, 1000);
+};
+
+/**
+ *
+ * @param {Object} car
+ * car = {maxSpeed: {number}, speedUpRate: {number}, slowDownRate: {number}, turnSpeed: {number}}
+ */
+export const initializeGameStates = function () {
+  if (state.canvas?.speedUpTimer) {
+    clearInterval(state.canvas.speedUpTimer);
+  }
+  if (state.canvas?.slowDownTimer) {
+    clearInterval(state.canvas.slowDownTimer);
+  }
+  if (state.game?.gamePlayTimer) {
+    clearInterval(state.game.gamePlayTimer);
+  }
+
+  state.canvas = {
+    forwardSpeed: 0,
+    turnSpeed: 0,
+    parallaxVerticalOffset: 0,
+    parallaxHorizontalOffset: 0,
+    speedUpTimer: undefined,
+    slowDownTimer: undefined,
+  };
+
+  state.stone = {
+    displayInterval: -1,
+  };
+  state.roadrepair = {
+    displayInterval: -1,
+  };
+  state.coin = {
+    displayInterval: -1,
+  };
+
+  state.road = {
+    type: 1,
+    displayInterval: -1,
+    leftOffsetReducedFactor: 0.36,
+    rightOffsetReducedFactor: 0.36,
+  };
+
+  state.botCars = [];
+
+  state.game = {
+    pause: false,
+    stones: [...stones.map((stone) => ({ ...stone }))],
+    roadRepairs: [...roadRepairs.map((roadRepair) => ({ ...roadRepair }))],
+    coins: [...coins.map((coin) => ({ ...coin }))],
+    botCars: [...botCars.map((botCar) => ({ ...botCar }))],
+    roads: [...roads.map((road) => ({ ...road }))],
+    health: 100,
+    maxHealth: 100,
+    currentInterval: 1,
+    score: 0,
+    playTime: 0,
+    gamePlayTimer: undefined,
+  };
+
+  state.car = cars[0];
+};
+
+export const prevCar = function () {
+  if (state.car.id === 0) {
+    state.car = cars[cars.length - 1];
+  } else {
+    state.car = cars.find((car) => car.id === state.car.id - 1);
+  }
+};
+
+export const nextCar = function () {
+  if (state.car.id === cars.length - 1) {
+    state.car = cars[0];
+  } else {
+    state.car = cars.find((car) => car.id === state.car.id + 1);
+  }
 };
 
 //////////////////////////////////////////////////////////////////////////////
