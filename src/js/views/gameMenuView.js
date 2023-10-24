@@ -86,10 +86,10 @@ class GameMenuView extends View {
         <div class="car-specs">
           <h2 class="car-specs-heading">Car Specs</h2>
           <ul class="car-specs-list">
-            <li>Maximum Speed: ${this._data.maxSpeed}</li>
-            <li>Acceleration: ${this._data.speedUpRate}</li>
-            <li>Deceleration: ${this._data.slowDownRate}</li>
-            <li>Cornering Speed: ${this._data.turnSpeed}</li>
+            <li>Maximum Speed: ${this._data.maxSpeed * 5}</li>
+            <li>Acceleration: ${this._data.speedUpRate * 5}</li>
+            <li>Deceleration: ${this._data.slowDownRate * 5}</li>
+            <li>Cornering Speed: ${this._data.turnSpeed * 5}</li>
           </ul>
         </div>
         <div class="start-button">

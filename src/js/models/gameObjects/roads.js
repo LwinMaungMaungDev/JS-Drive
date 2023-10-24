@@ -1,7 +1,7 @@
 export const roads = [
   {
     type: 2,
-    displayInterval: 5,
+    displayInterval: 15,
     leftOffsetReducedFactor: 0.5,
     rightOffsetReducedFactor: 0.5,
   },

@@ -5,6 +5,7 @@ import { coins } from "./gameObjects/coins.js";
 import { roads } from "./gameObjects/roads.js";
 import { botCars } from "./gameObjects/botCars.js";
 import { cars } from "./gameObjects/cars.js";
+import { accidents } from "./gameObjects/accidents.js";
 
 export const state = {};
 
@@ -57,6 +58,9 @@ export const initializeGameStates = function () {
   state.coin = {
     displayInterval: -1,
   };
+  state.accident = {
+    displayInterval: -1,
+  };
 
   state.road = {
     type: 1,
@@ -74,6 +78,7 @@ export const initializeGameStates = function () {
     coins: [...coins.map((coin) => ({ ...coin }))],
     botCars: [...botCars.map((botCar) => ({ ...botCar }))],
     roads: [...roads.map((road) => ({ ...road }))],
+    accidents: [...accidents.map((accident) => ({ ...accident }))],
     health: 100,
     maxHealth: 100,
     currentInterval: 1,
@@ -152,6 +157,12 @@ const _addObjects = function () {
       state.botCars.splice(i, 1);
     }
   });
+  // Add accidents
+  if (
+    state.game.accidents.length &&
+    state.game.currentInterval > state.accident.displayInterval
+  )
+    state.accident = state.game.accidents.pop();
 };
 
 export const setParallaxHorizontalOffset = function (offset) {
@@ -211,7 +222,7 @@ export const stopSlowDown = function () {
 export const turn = function (direction) {
   const { canvas } = state;
   const { car } = state;
-  if (canvas.forwardSpeed <= 0) return;
+  if (canvas.forwardSpeed <= 0 || state.game.pause) return;
   if (canvas.forwardSpeed > 20) {
     canvas.turnSpeed =
       direction * 10000 ** (car.turnSpeed / canvas.forwardSpeed);
@@ -224,7 +235,8 @@ export const turn = function (direction) {
 export const switchRoad = function () {
   if (
     state.game.roads.length &&
-    state.game.currentInterval > state.road.displayInterval
+    state.game.currentInterval >
+      state.game.roads[state.game.roads.length - 1].displayInterval
   ) {
     state.road = state.game.roads.pop();
     return state.road;
@@ -297,7 +309,9 @@ export const moveBotCars = function () {
       // Move bot cars down by forward speed
       state.botCars[i].dy += state.canvas.forwardSpeed;
       // Move bot cars up
-      state.botCars[i].dy -= state.botCars[i].speed;
+      if (state.botCars[i].direction === 1)
+        state.botCars[i].dy -= state.botCars[i].speed;
+      else state.botCars[i].dy += state.botCars[i].speed;
     }
   });
 };

@@ -14,6 +14,7 @@ class GameUiView extends View {
   _accelerometerLineImg = new Image();
   _brakeImg = new Image();
   _leverImg = new Image();
+  _coinImg = new Image();
 
   constructor() {
     super();
@@ -39,6 +40,11 @@ class GameUiView extends View {
     // Lever
     this._leverImg.src = new URL(
       "../../img/btn/lever.png?as=png",
+      import.meta.url
+    );
+    // Coin
+    this._coinImg.src = new URL(
+      "../../img/canvas/coin.png?as=png",
       import.meta.url
     );
   }
@@ -88,8 +94,14 @@ class GameUiView extends View {
         </div>
         <div class="game-right-components">
           <div class="high-score-pause-container">
-            <p class="high-score label">High Score: 0</p>
-            <p class="score label">Score: 0</p>
+            <div class="coin">
+              <img
+                class="coin-img"
+                src="${this._coinImg.src}"
+                alt="Coin Image"
+              />
+              <span class="score">0</span>
+            </div>
             <button class="btn btn--pause">
               <svg class="btn--icon">
                 <use href="${icons}#icon-pause-circle-outline"></use>
@@ -134,7 +146,7 @@ class GameUiView extends View {
   }
 
   setCurrentScore(score) {
-    this._parentElement.querySelector(".score").innerHTML = `Score: ${score}`;
+    this._parentElement.querySelector(".score").innerHTML = `${score}`;
   }
 
   ////////////////////////////////////////////////////////////////////////

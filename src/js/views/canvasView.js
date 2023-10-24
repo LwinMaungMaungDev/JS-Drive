@@ -21,6 +21,8 @@ class CanvasView extends View {
   _roadrepair1 = new Image();
   _coin = new Image();
   _botCar = new Image();
+  _canvasBg = new Image();
+  _accident = new Image();
   _upperBackground;
   _lowerBackground;
   _isSwitchingRoad = false;
@@ -83,12 +85,27 @@ class CanvasView extends View {
       "../../img/cars/red-car2.png?as=png",
       import.meta.url
     );
+    // Canvas Background
+    this._canvasBg.src = new URL(
+      "../../img/canvas/canvasbg.jpg?as=jpg",
+      import.meta.url
+    );
+    // Accident
+    this._accident.src = new URL(
+      "../../img/canvas/car-accident1.png?as=png",
+      import.meta.url
+    );
   }
 
   _generateMarkup() {
     // You can use _data here
     return `
       <canvas id="canvas"></canvas>
+      <img class="game-canvas-background-img"
+        src="${this._canvasBg.src}"
+        alt="Blue Shiny Background"
+        />  
+      <div class="game-canvas-background-overlay"></div>
     `;
   }
 
@@ -122,7 +139,7 @@ class CanvasView extends View {
    * @param {Object[]} botCars
    * @param {number} currentInterval
    */
-  drawCanvas(canvas, stone, roadrepair, coin, car, currentInterval) {
+  drawCanvas(canvas, stone, roadrepair, coin, accident, car, currentInterval) {
     const { parallaxHorizontalOffset, parallaxVerticalOffset, turnSpeed } =
       canvas;
     // 1) Draw background image
@@ -159,6 +176,13 @@ class CanvasView extends View {
       parallaxHorizontalOffset,
       parallaxVerticalOffset,
       coin,
+      currentInterval
+    );
+    // 6) Draw accidents
+    this._drawAccidents(
+      parallaxHorizontalOffset,
+      parallaxVerticalOffset,
+      accident,
       currentInterval
     );
   }
@@ -292,7 +316,8 @@ class CanvasView extends View {
           ? botCar.dy
           : parallaxVerticalOffset - this._canvas.height,
         responsive(botCar.width, this._canvas.width),
-        responsive(botCar.height, this._canvas.width)
+        responsive(botCar.height, this._canvas.width),
+        botCar.direction === -1 ? 180 : undefined
       );
     }
   }
@@ -373,6 +398,36 @@ class CanvasView extends View {
         parallaxVerticalOffset,
         coin,
         this._coin,
+        currentInterval
+      );
+    }
+  }
+
+  // Accidents
+  _drawAccidents(
+    parallaxHorizontalOffset,
+    parallaxVerticalOffset,
+    accident,
+    currentInterval
+  ) {
+    if (
+      accident.displayInterval === currentInterval ||
+      accident.displayInterval - 1 === currentInterval
+    ) {
+      let accidentImg = this._accident;
+      switch (accident.type) {
+        case 1:
+          accidentImg = this._accident;
+          break;
+        case 2:
+          accidentImg = this._accident;
+          break;
+      }
+      this._drawObjects(
+        parallaxHorizontalOffset,
+        parallaxVerticalOffset,
+        accident,
+        accidentImg,
         currentInterval
       );
     }

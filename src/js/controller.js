@@ -16,6 +16,7 @@ function startCanvasAnimation() {
   const { road } = gameState.state;
   const { botCars } = gameState.state;
   const { car } = gameState.state;
+  const { accident } = gameState.state;
 
   if (game.pause) return;
 
@@ -52,6 +53,7 @@ function startCanvasAnimation() {
     stone,
     roadrepair,
     coin,
+    accident,
     car,
     game.currentInterval
   );
@@ -80,10 +82,14 @@ function startCanvasAnimation() {
       _detectCollision(botCar);
   });
 
-  // 10) Update Accelerometer
+  // 10) Detect collision for coins
+  if (accident.displayInterval === game.currentInterval)
+    _detectCollision(accident);
+
+  // 11) Update Accelerometer
   _updateAccelerometer();
 
-  // 11) Loop the animation
+  // 12) Loop the animation
   window.requestAnimationFrame(startCanvasAnimation);
 }
 
@@ -218,7 +224,12 @@ function _handleControlKeyPresses() {
   ["keydown", "keyup"].map((event) => {
     const isKeydown = event === "keydown";
     document.addEventListener(event, function (e) {
-      if (gameState.state.game.pause) return;
+      if (gameState.state.game.pause) {
+        gameState.stopSpeedingUp();
+        gameState.turn(0);
+        gameState.stopSlowDown();
+        return;
+      }
 
       switch (e.key) {
         case "w":
