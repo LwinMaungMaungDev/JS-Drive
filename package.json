@@ -2,6 +2,7 @@
   "name": "jsdrive",
   "version": "1.0.0",
   "description": "JS Drive is a JavaScript based car racing game. Avoid obstacles along the road, speed up or slow down when necessary. See how many scores you can get.",
+  "default": "index.html",
   "scripts": {
     "start": "parcel index.html",
     "build": "parcel build index.html"

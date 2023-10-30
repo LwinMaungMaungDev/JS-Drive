@@ -44,10 +44,16 @@
   overflow: hidden;
 }
 
-.slide-car-img {
+.slide--1,
+.slide--2,
+.slide--3,
+.slide--4 {
   position: absolute;
-  width: 4.4rem;
-  height: 4.4rem * 128 / 53;
+}
+
+.slide-car-img {
+  height: 100%;
+  aspect-ratio: 53 / 128;
 
   transition: transform 1s;
 }
@@ -231,7 +237,7 @@
 /****************************************/
 
 .game-pause-window {
-  position: fixed;
+  position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);

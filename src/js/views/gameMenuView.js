@@ -7,9 +7,13 @@ class GameMenuView extends View {
 
   _bgImg = new Image();
   _car1 = new Image();
+  _car1_webp = new Image();
   _car2 = new Image();
+  _car2_webp = new Image();
   _car3 = new Image();
+  _car3_webp = new Image();
   _car4 = new Image();
+  _car4_webp = new Image();
   _startBtnImg = new Image();
 
   _errorMessage = "Opps... Error! Please try again.";

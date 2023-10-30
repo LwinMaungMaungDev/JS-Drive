@@ -256,7 +256,7 @@ export const handleCollision = function (direction) {
   if (direction === 0) {
     if (state.canvas.forwardSpeed) {
       // Player hit object
-      state.game.health -= Math.round(state.canvas.forwardSpeed);
+      state.game.health -= Math.round(Math.abs(state.canvas.forwardSpeed));
       if (state.game.health < state.game.maxHealth * 0.05) {
         state.game.health = 0;
       }
@@ -268,7 +268,9 @@ export const handleCollision = function (direction) {
   } else {
     if (state.canvas.forwardSpeed) {
       // Player hit object
-      state.game.health -= Math.round(state.canvas.forwardSpeed * 0.5);
+      state.game.health -= Math.round(
+        Math.abs(state.canvas.forwardSpeed * 0.5)
+      );
       if (state.game.health < state.game.maxHealth * 0.05) {
         state.game.health = 0;
       }

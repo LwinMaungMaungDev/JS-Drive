@@ -203,34 +203,42 @@ class GameUiView extends View {
   // Handlers
 
   addHandlerControlSpeed(speedUp, stopSpeedingUp, slowDown, stopSlowDown) {
-    ["mousedown", "mouseup", "mouseout"].map((event) =>
-      this._parentElement.addEventListener(event, function (e) {
-        const el = e.target.closest(".btn");
-        if (!el) return;
-        if (el.classList.contains("btn--lever")) {
-          if (event === "mousedown") speedUp();
-          else stopSpeedingUp();
-        } else if (el.classList.contains("btn--brake")) {
-          if (event === "mousedown") slowDown();
-          else stopSlowDown();
-        }
-      })
+    ["mousedown", "mouseup", "mouseout", "touchstart", "touchend"].map(
+      (event) =>
+        this._parentElement.addEventListener(event, function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          this.style.userSelect = "none";
+          const el = e.target.closest(".btn");
+          if (!el) return;
+          if (el.classList.contains("btn--lever")) {
+            if (event === "mousedown" || event === "touchstart") speedUp();
+            else stopSpeedingUp();
+          } else if (el.classList.contains("btn--brake")) {
+            if (event === "mousedown" || event === "touchstart") slowDown();
+            else stopSlowDown();
+          }
+        })
     );
   }
 
   addHandlerControlTurn(handler) {
-    ["mousedown", "mouseup", "mouseout"].map((event) =>
-      this._parentElement.addEventListener(event, function (e) {
-        const el = e.target.closest(".btn");
-        if (!el) return;
-        if (el.classList.contains("btn--turn-left")) {
-          if (event === "mousedown") handler(1);
-          else handler(0);
-        } else if (el.classList.contains("btn--turn-right")) {
-          if (event === "mousedown") handler(-1);
-          else handler(0);
-        }
-      })
+    ["mousedown", "mouseup", "mouseout", "touchstart", "touchend"].map(
+      (event) =>
+        this._parentElement.addEventListener(event, function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          this.style.userSelect = "none";
+          const el = e.target.closest(".btn");
+          if (!el) return;
+          if (el.classList.contains("btn--turn-left")) {
+            if (event === "mousedown" || event === "touchstart") handler(1);
+            else handler(0);
+          } else if (el.classList.contains("btn--turn-right")) {
+            if (event === "mousedown" || event === "touchstart") handler(-1);
+            else handler(0);
+          }
+        })
     );
   }
 
@@ -247,9 +255,11 @@ class GameUiView extends View {
   // *** Pause ***
 
   addHandlerGamePause(handler) {
-    this._parentElement.addEventListener(
-      "click",
-      this._pauseGame.bind(this, handler)
+    ["click", "touchstart"].map((event) =>
+      this._parentElement.addEventListener(
+        event,
+        this._pauseGame.bind(this, handler)
+      )
     );
   }
 

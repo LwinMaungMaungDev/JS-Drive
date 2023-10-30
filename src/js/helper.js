@@ -14,8 +14,8 @@ export const calCarDx = function (canvasWidth, carWidth) {
  * @param {number} carHeight The height of the player's car
  * @returns {number}
  */
-export const calCarDy = function (canvasHeight, carHeight) {
-  return canvasHeight - carHeight * 2;
+export const calCarDy = function (canvasHeight) {
+  return canvasHeight / 1.25;
 };
 
 /**

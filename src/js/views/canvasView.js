@@ -40,12 +40,12 @@ class CanvasView extends View {
     // Background Roads
     // 1)
     this._road1.src = new URL(
-      "../../img/canvas/roadTest.png?as=png",
+      "../../img/canvas/roadTest.jpg?as=jpg",
       import.meta.url
     );
     // 2)
     this._road2.src = new URL(
-      "../../img/canvas/gravelRoadTest.png?as=png",
+      "../../img/canvas/gravelRoadTest.jpg?as=jpg",
       import.meta.url
     );
     // Stone1
@@ -112,8 +112,8 @@ class CanvasView extends View {
   initializeCanvas(startCanvasAnimation) {
     this._canvas = document.getElementById("canvas");
     this._ctx = this._canvas.getContext("2d");
-    this._canvas.width = window.innerWidth > 700 ? 700 : window.innerWidth;
     this._canvas.height = window.innerHeight;
+    this._canvas.width = window.innerHeight / 1.2;
 
     // Reset Values
     this._upperBackground = this._road1;

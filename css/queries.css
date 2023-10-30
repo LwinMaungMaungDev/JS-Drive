@@ -161,6 +161,17 @@ Instead, 1rem = 1em = 16px  */
 
   /* Game */
 
+  .game-pause-window {
+    column-gap: 1.2rem;
+    row-gap: 1.2rem;
+    padding: 3.5rem 4rem;
+    transform: translate(-50%, -50%);
+  }
+
+  .btn-text {
+    font-size: 1.2rem;
+  }
+
   .coin-img {
     width: 3.6rem;
     height: 3.6rem;
@@ -182,5 +193,21 @@ Instead, 1rem = 1em = 16px  */
 
   .speed-btns {
     gap: 10px;
+  }
+}
+
+/****************************************/
+/* BELOW 350px */
+/****************************************/
+
+@media (max-width: 22em) {
+  .slide-car-img {
+    height: 60%;
+  }
+
+  .game-pause-window {
+    column-gap: 1.2rem;
+    row-gap: 1.2rem;
+    padding: 2rem 2rem;
   }
 }
